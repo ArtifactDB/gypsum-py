@@ -1,0 +1,7 @@
+gypsum
+======
+
+.. toctree::
+   :maxdepth: 4
+
+   gypsum

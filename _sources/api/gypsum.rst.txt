@@ -1,0 +1,21 @@
+gypsum package
+==============
+
+Submodules
+----------
+
+gypsum.skeleton module
+----------------------
+
+.. automodule:: gypsum.skeleton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: gypsum
+   :members:
+   :undoc-members:
+   :show-inheritance:
