@@ -7,7 +7,7 @@ __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
 
-def test_fib():
+def test_truncating_url():
     single_slash = _remove_slash_url("https://jkanche.com/")
     assert single_slash == "https://jkanche.com"
 
