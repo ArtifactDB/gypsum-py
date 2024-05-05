@@ -3,9 +3,7 @@ import time
 from typing import Optional
 
 from filelock import FileLock
-from oauthlib.oauth2 import BackendApplicationClient
 from requests import get
-from requests_oauthlib import OAuth2Session
 
 from ._github import github_auth_token
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
