@@ -58,11 +58,12 @@ def access_token(
                 with open(cache_path, "r") as file:
                     dump = file.read().splitlines()
 
-            exp = float(dump[2])
-            if exp > time.time() + expiry_leeway:
-                info = {"token": dump[0], "name": dump[1], "expires": exp}
-                TOKEN_CACHE["auth_info"] = info
-                return _token_func(info)
+            if len(dump) > 0:
+                exp = float(dump[2])
+                if exp > time.time() + expiry_leeway:
+                    info = {"token": dump[0], "name": dump[1], "expires": exp}
+                    TOKEN_CACHE["auth_info"] = info
+                    return _token_func(info)
             else:
                 os.unlink(cache_path)
 
