@@ -1,7 +1,6 @@
 import os
 import time
 from typing import Optional
-from pathlib import Path
 
 import requests
 from filelock import FileLock
