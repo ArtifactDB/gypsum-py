@@ -7,6 +7,7 @@ from oauthlib.oauth2 import BackendApplicationClient
 from requests import get
 from requests_oauthlib import OAuth2Session
 
+from ._github import github_auth_token
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
 
 TOKEN_CACHE = {}
@@ -118,13 +119,7 @@ def set_access_token(
     cache_dir = _cache_directory(cache_dir)
 
     if not token:
-        if not app_key and not app_secret:
-            raise ValueError(
-                "'app_key' and 'app_secret' must be provided if 'token' is not specified."
-            )
-
         if not app_key or not app_secret:
-
             _url = f"{_remove_slash_url(app_url)}/credentials/github-app"
             headers = {}
             if user_agent:
@@ -133,19 +128,17 @@ def set_access_token(
             r = get(_url, headers=headers)
             r.raise_for_status()
 
-            info = r.json()
-            app_key < -info["id"]
-            app_secret < -info["secret"]
+            _info = r.json()
+            print(_info)
+            app_key = _info["id"]
+            app_secret = _info["secret"]
 
-        client = BackendApplicationClient(client_id=app_key)
-        oauth = OAuth2Session(client=client)
-        ores = oauth.fetch_token(
-            token_url="https://github.com/login/oauth/access_token",
+        token = github_auth_token(
             client_id=app_key,
             client_secret=app_secret,
+            authorization_url="https://github.com/login/oauth/authorize",
+            token_url="https://github.com/login/oauth/access_token",
         )
-
-        token = ores["access_token"]
 
     headers = {}
     if user_agent:
