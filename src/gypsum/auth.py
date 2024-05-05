@@ -1,11 +1,12 @@
 import os
 import time
 from typing import Optional
+from pathlib import Path
 
+import requests
 from filelock import FileLock
-from requests import get
 
-from ._github import github_auth_token
+from ._github import github_access_token
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
 
 TOKEN_CACHE = {}
@@ -18,7 +19,7 @@ def _token_cache_path(cache_dir):
 def access_token(
     full: bool = False, request: bool = True, cache_dir: Optional[str] = None
 ):
-    """Get GitHub access tokens for authentication to the gypsum API's.
+    """Get GitHub access token for authentication to the gypsum API's.
 
     Args:
         full:
@@ -42,8 +43,6 @@ def access_token(
     def _token_func(x):
         return x["token"] if not full else x
 
-    cache_dir = _cache_directory(cache_dir)
-
     in_memory = TOKEN_CACHE.get("auth_info")
     if in_memory is not None:
         if in_memory["expires"] > time.time() + expiry_leeway:
@@ -51,7 +50,8 @@ def access_token(
         else:
             TOKEN_CACHE["auth_info"] = None
 
-    if cache_dir:
+    cache_dir = _cache_directory(cache_dir)
+    if cache_dir is not None:
         cache_path = _token_cache_path(cache_dir)
         if os.path.exists(cache_path):
             _lock = FileLock(cache_path)
@@ -68,7 +68,7 @@ def access_token(
                 os.unlink(cache_path)
 
     if request:
-        payload = set_access_token(cache=cache_dir)
+        payload = set_access_token(cache_dir=cache_dir)
         return _token_func(payload) if payload else None
     else:
         return None
@@ -76,14 +76,14 @@ def access_token(
 
 def set_access_token(
     token: Optional[str] = None,
-    app_url: Optional[str] = _rest_url(),
+    app_url: str = _rest_url(),
     app_key: Optional[str] = None,
     app_secret: Optional[str] = None,
     github_url: str = "https://api.github.com",
     user_agent: Optional[str] = None,
     cache_dir: Optional[str] = None,
 ):
-    """Set GitHub access tokens for authentication to the gypsum API's.
+    """Set GitHub access token for authentication to the gypsum API's.
 
     Args:
         token:
@@ -114,8 +114,6 @@ def set_access_token(
     """
     global TOKEN_CACHE
 
-    cache_dir = _cache_directory(cache_dir)
-
     if not token:
         if not app_key or not app_secret:
             _url = f"{_remove_slash_url(app_url)}/credentials/github-app"
@@ -123,15 +121,14 @@ def set_access_token(
             if user_agent:
                 headers["User-Agent"] = user_agent
 
-            r = get(_url, headers=headers)
+            r = requests.get(_url, headers=headers)
             r.raise_for_status()
 
             _info = r.json()
-            print(_info)
             app_key = _info["id"]
             app_secret = _info["secret"]
 
-        token = github_auth_token(
+        token = github_access_token(
             client_id=app_key,
             client_secret=app_secret,
             authorization_url="https://github.com/login/oauth/authorize",
@@ -142,20 +139,20 @@ def set_access_token(
     if user_agent:
         headers["User-Agent"] = user_agent
 
-    headers["Authorizaton"] = f"Bearer {token}"
+    headers["Authorization"] = f"Bearer {token}"
 
-    req = get(f"{_remove_slash_url(github_url)}/user", headers=headers)
-    req.raise_for_status()
+    token_req = requests.get(f"{_remove_slash_url(github_url)}/user", headers=headers)
+    token_req.raise_for_status()
 
-    res = req.json()
-
-    name = res["login"]
-    expires_header = req.headers.get("github-authentication-token-expiration")
+    token_resp = token_req.json()
+    name = token_resp["login"]
+    expires_header = token_req.headers.get("github-authentication-token-expiration")
     expiry = float(expires_header.split()[0]) if expires_header else float("inf")
 
-    if not cache_dir:
+    cache_dir = _cache_directory(cache_dir)
+    if cache_dir is not None:
         cache_path = _token_cache_path(cache_dir)
-        os.makedirs(cache_path, exist_ok=True)
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
         _lock = FileLock(cache_path)
         with _lock:

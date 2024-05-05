@@ -3,12 +3,11 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import requests
-from requests_oauthlib import OAuth2Session
 
 AUTH_CODE = None
 
 
-def github_auth_token(client_id, client_secret, authorization_url, token_url):
+def github_access_token(client_id, client_secret, authorization_url, token_url):
     class AuthorizationHandler(BaseHTTPRequestHandler):
         def do_GET(self):
             global AUTH_CODE
@@ -28,28 +27,23 @@ def github_auth_token(client_id, client_secret, authorization_url, token_url):
         server = HTTPServer(("localhost", 1410), AuthorizationHandler)
         server.serve_forever()
 
-    github = OAuth2Session(client_id)
-    _auth_url, _ = github.authorization_url(authorization_url)
+    _auth_url = (
+        f"{authorization_url}?client_id={client_id}&redirect_url=http://localhost:1410"
+    )
 
     server_thread = threading.Thread(target=start_temp_server)
     server_thread.start()
     webbrowser.open(_auth_url)
     server_thread.join()
 
-    headers = {"accept": "*/*"}
+    headers = {"accept": "application/json"}
     parameters = {
         "client_id": client_id,
         "client_secret": client_secret,
-        "access_code": AUTH_CODE,
+        "code": AUTH_CODE,
     }
-    response = requests.get(token_url, headers=headers, params=parameters)
-    print(response.text)
-    token = response.text
-
-    print(token)
-
-    # token = github.fetch_token(
-    #     token_url, code=AUTH_CODE, client_secret=client_secret
-    # )
+    token_req = requests.post(token_url, headers=headers, json=parameters)
+    token_req.raise_for_status()
+    token = token_req.json()["access_token"]
 
     return token
