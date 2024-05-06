@@ -1,0 +1,61 @@
+import json
+import os
+import time
+from typing import Optional
+
+import requests
+from filelock import FileLock
+
+from ._utils import _cache_directory, _rest_url
+
+CREDS_CACHE = {"uncached": None, "info": {}}
+
+
+def _config_cache_path(cache_dir):
+    return os.path.join(cache_dir, "credentials", "s3.json")
+
+
+def public_s3_config(
+    refresh: bool = False, url: str = _rest_url(), cache_dir: Optional[str] = None
+):
+    creds = None
+    cache_dir = _cache_directory(cache_dir)
+
+    if not refresh:
+        if cache_dir is None:
+            creds = CREDS_CACHE["uncached"]
+            if creds is not None:
+                return creds
+        else:
+            creds = CREDS_CACHE["info"].get(cache_dir)
+            if creds is not None:
+                return creds
+
+            cache_path = _config_cache_path(cache_dir)
+            if os.path.exists(cache_path):
+                _lock = FileLock(cache_path)
+                with _lock:
+                    with open(cache_dir, "r") as f:
+                        creds = json.load(f)
+
+                if (time.time() - os.path.getctime(cache_dir)) <= (
+                    1 * 7 * 24 * 60 * 60
+                ):
+                    CREDS_CACHE["info"][cache_dir] = creds
+                    return creds
+
+    req = requests.get(url + "/credentials/s3-api")
+    creds = req.json()
+
+    if cache_dir is None:
+        CREDS_CACHE["uncached"] = creds
+    else:
+        CREDS_CACHE["info"][cache_dir] = creds
+        config_path = _config_cache_path(cache_dir)
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+
+        with FileLock(config_path):
+            with open(config_path, "w") as f:
+                json.dump(creds, f)
+
+    return creds

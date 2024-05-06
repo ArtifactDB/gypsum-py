@@ -16,3 +16,4 @@ finally:
     del version, PackageNotFoundError
 
 from .auth import access_token, set_access_token
+from .s3_config import public_s3_config
