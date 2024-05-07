@@ -1,7 +1,7 @@
-gypsum
-======
+gypsum_client
+=============
 
 .. toctree::
    :maxdepth: 4
 
-   gypsum
+   gypsum_client

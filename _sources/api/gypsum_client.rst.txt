@@ -1,0 +1,21 @@
+gypsum\_client package
+======================
+
+Submodules
+----------
+
+gypsum\_client.skeleton module
+------------------------------
+
+.. automodule:: gypsum_client.skeleton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: gypsum_client
+   :members:
+   :undoc-members:
+   :show-inheritance:
