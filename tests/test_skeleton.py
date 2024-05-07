@@ -1,6 +1,6 @@
 import pytest
 
-from gypsum.skeleton import fib, main
+from gypsum_client.skeleton import fib, main
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"

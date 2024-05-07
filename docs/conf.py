@@ -34,7 +34,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/gypsum")
+module_dir = os.path.join(__location__, "../src/gypsum_client")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -105,7 +105,7 @@ source_suffix = [".rst", ".md"]
 master_doc = "index"
 
 # General information about the project.
-project = "gypsum"
+project = "gypsum-client"
 copyright = "2024, Jayaram Kancherla"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -117,7 +117,7 @@ copyright = "2024, Jayaram Kancherla"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 try:
-    from gypsum import __version__ as version
+    from gypsum_client import __version__ as version
 except ImportError:
     version = ""
 
@@ -247,7 +247,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "gypsum-doc"
+htmlhelp_basename = "gypsum-client-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -264,7 +264,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "gypsum Documentation", "Jayaram Kancherla", "manual")
+    ("index", "user_guide.tex", "gypsum-client Documentation", "Jayaram Kancherla", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
