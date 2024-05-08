@@ -1,4 +1,4 @@
-# gypsum
+# gypsum-client
 
 Add a short description here!
 
