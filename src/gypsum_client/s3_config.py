@@ -8,6 +8,11 @@ from filelock import FileLock
 
 from ._utils import _cache_directory, _rest_url
 
+__author__ = "Jayaram Kancherla"
+__copyright__ = "Jayaram Kancherla"
+__license__ = "MIT"
+
+
 CREDS_CACHE = {"uncached": None, "info": {}}
 
 
@@ -18,6 +23,24 @@ def _config_cache_path(cache_dir):
 def public_s3_config(
     refresh: bool = False, url: str = _rest_url(), cache_dir: Optional[str] = None
 ):
+    """Get S3 configuration to the bucket storing the data.
+
+    Users can use this downstream to access the bucket directly using boto3.
+
+    Args:
+        refresh:
+            Whether to refresh the cached credentials.
+            Defaults to False.
+
+        url:
+            URL to the gypsum compatible API.
+
+        cache_dir:
+            _description_. Defaults to None.
+
+    Returns:
+        A dictionary containing the S3 credentials.
+    """
     creds = None
     cache_dir = _cache_directory(cache_dir)
 

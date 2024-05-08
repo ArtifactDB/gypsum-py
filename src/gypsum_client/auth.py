@@ -8,6 +8,10 @@ from filelock import FileLock
 from ._github import github_access_token
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
 
+__author__ = "Jayaram Kancherla"
+__copyright__ = "Jayaram Kancherla"
+__license__ = "MIT"
+
 TOKEN_CACHE = {}
 
 

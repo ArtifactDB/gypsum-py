@@ -4,10 +4,27 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import requests
 
+__author__ = "Jayaram Kancherla"
+__copyright__ = "Jayaram Kancherla"
+__license__ = "MIT"
+
 AUTH_CODE = None
 
 
 def github_access_token(client_id, client_secret, authorization_url, token_url):
+    """Get access token from GitHub.
+
+    Users should look at :pu:func:`~.auth.access_token` function.
+
+    This process temporarily spins up a server similar to capture the redirction url and
+    extract the access token similar to how httr's `oauth_flow_auth_code` method.
+    This allows us to programmatically capture access tokens from the url without the user
+    having to manually input the code.
+
+    Follows authentication flow described here -
+    https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app.
+    """
+
     class AuthorizationHandler(BaseHTTPRequestHandler):
         def do_GET(self):
             global AUTH_CODE
@@ -18,7 +35,7 @@ def github_access_token(client_id, client_secret, authorization_url, token_url):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(
-                    b"<h2>Authorization Code Received, Close this tab and go back to the session</h2>"
+                    b"<h2>Authorization Code Received. Close this tab and go back to the python session.</h2>"
                 )
 
                 raise SystemExit

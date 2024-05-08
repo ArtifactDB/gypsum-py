@@ -2,6 +2,10 @@ import os
 from pathlib import Path
 from typing import Optional
 
+__author__ = "Jayaram Kancherla"
+__copyright__ = "Jayaram Kancherla"
+__license__ = "MIT"
+
 
 def _rest_url(url: Optional[str] = None):
     current = "https://gypsum.artifactdb.com"
