@@ -36,7 +36,8 @@ def public_s3_config(
             URL to the gypsum compatible API.
 
         cache_dir:
-            _description_. Defaults to None.
+            Path to the cache directory.
+            Defaults to None.
 
     Returns:
         A dictionary containing the S3 credentials.
