@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from typing import Optional
 
+import requests
+
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
@@ -46,3 +48,32 @@ def _remove_slash_url(url: str):
         url = url.rstrip("/")
 
     return url
+
+
+def _list_for_prefix(
+    prefix: str,
+    url: str,
+    recursive: bool = False,
+    include_dot: bool = False,
+    only_dirs: bool = True,
+):
+    url = url + "/list"
+
+    qparams = {"recursive": "true" if recursive is True else "false"}
+    if prefix is not None:
+        qparams["prefix"] = prefix
+
+    req = requests.get(url, params=qparams)
+    req.raise_for_status()
+
+    resp = req.json()
+    if only_dirs is True:
+        resp = [val for val in resp if val.endswith("/")]
+
+    if prefix is not None:
+        resp = [val.replace(prefix, "") for val in resp if val.startswith(prefix)]
+
+    if include_dot is False:
+        resp = [_remove_slash_url(val) for val in resp if not val.startswith("..")]
+
+    return resp

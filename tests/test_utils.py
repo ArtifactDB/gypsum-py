@@ -1,5 +1,3 @@
-import pytest
-
 from gypsum_client._utils import _remove_slash_url
 
 __author__ = "Jayaram Kancherla"
