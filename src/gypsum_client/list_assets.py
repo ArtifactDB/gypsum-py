@@ -30,17 +30,18 @@ def list_files(
     url: str = _rest_url(),
 ):
     _prefix = f"{project}/{asset}/{version}/"
+    _trunc = len(_prefix)
     if prefix is not None:
         _prefix = f"{_prefix}{prefix}"
 
-    req = requests.get(f"{url}/list", params={"recursive": True, "prefix": _prefix})
+    req = requests.get(f"{url}/list", params={"recursive": "true", "prefix": _prefix})
     req.raise_for_status()
-
     resp = req.json()
-    resp = [val for val in resp if val.endswith("/")]
+
+    resp = [val[_trunc:] for val in resp]
 
     if prefix is not None:
-        resp = [val.startswith(prefix) for val in resp]
+        resp = [val for val in resp if val.startswith(prefix)]
 
     if include_dot is False:
         resp = [val for val in resp if not val.startswith("..")]

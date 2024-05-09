@@ -1,4 +1,3 @@
-import pytest
 from gypsum_client.list_assets import (
     list_assets,
     list_files,
@@ -11,11 +10,9 @@ __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
 
-def test_list_versions():
-    versions = list_versions("test-R", "basic")
-    assert "v1" in versions
-    assert "v2" in versions
-    assert "v3" in versions
+def test_list_projects():
+    projects = list_projects()
+    assert "test-R" in projects
 
 
 def test_list_assets():
@@ -23,9 +20,11 @@ def test_list_assets():
     assert "basic" in assets
 
 
-def test_list_projects():
-    projects = list_projects()
-    assert "test-R" in projects
+def test_list_versions():
+    versions = list_versions("test-R", "basic")
+    assert "v1" in versions
+    assert "v2" in versions
+    assert "v3" in versions
 
 
 def test_list_files():
