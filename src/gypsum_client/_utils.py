@@ -1,7 +1,9 @@
 import json
 import os
+import re
 import shutil
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 from urllib.parse import quote
@@ -151,3 +153,27 @@ def _save_file(
             shutil.move(tmp_file.name, destination)
 
     return True
+
+
+def _cast_datetime(x: list) -> list:
+    zend = [True if val.endswith("Z") else False for val in x]
+
+    for i, val in enumerate(x):
+        if zend[i]:
+            # strptime doesn't handle 'Z' offsets directly.
+            xz = x[i]
+            x[i] = xz[:-1] + "+0000"
+
+    if not all(zend):
+        # Remove colon in the timezone, which may confuse strptime.
+        for i, val in enumerate(x):
+            if not zend[i]:
+                x[i] = re.sub(":([0-9]{2})$", "\\1", val)
+
+    # Remove fractional seconds.
+    x = [re.sub("\\.[0-9]+", "", val) for val in x]
+
+    return [
+        datetime.strptime(val, "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=timezone.utc)
+        for val in x
+    ]
