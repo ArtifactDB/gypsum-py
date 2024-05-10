@@ -16,5 +16,14 @@ finally:
     del version, PackageNotFoundError
 
 from .auth import access_token, set_access_token
+from .fetch_assets import (
+    fetch_latest,
+    fetch_manifest,
+    fetch_permissions,
+    fetch_quota,
+    fetch_summary,
+    fetch_usage,
+)
+from .fetch_metadata_schema import fetch_metadata_schema
 from .list_assets import list_assets, list_files, list_projects, list_versions
 from .s3_config import public_s3_config
