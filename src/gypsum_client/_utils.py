@@ -135,7 +135,7 @@ def _save_file(
                 try:
                     full_url = f"{url}/file/{quote_plus(path)}"
 
-                    req = requests.get(full_url, stream=True, verify=False)
+                    req = requests.get(full_url, stream=True)
                     req.raise_for_status()
 
                     for chunk in req.iter_content(chunk_size=None):
