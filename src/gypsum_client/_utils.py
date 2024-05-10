@@ -158,3 +158,28 @@ def _cast_datetime(x):
     x = x.split(".")[0]
 
     return datetime.strptime(x, "%Y-%m-%dT%H:%M:%S").astimezone(tz=timezone.utc)
+
+
+def _rename_file(src: str, dest: str):
+    try:
+        os.rename(src, dest)
+    except OSError:
+        try:
+            # If renaming fails, try copying
+            shutil.copy(src, dest)
+            os.remove(src)  # Remove the original file after copying
+        except Exception as e:
+            raise RuntimeError(
+                f"Cannot move temporary file for '{src}' to its destination '{dest}': {e}."
+            )
+
+
+def _download_and_rename_file(url: str, dest: str):
+    tmp = tempfile.NamedTemporaryFile(dir=os.path.dirname(dest), delete=False).name
+    req = requests.get(url, stream=True)
+
+    with open(tmp, "wb") as f:
+        for chunk in req.iter_content():
+            f.write(chunk)
+
+    _rename_file(tmp, dest)
