@@ -1,9 +1,13 @@
+import json
 import os
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Optional
 from urllib.parse import quote
 
 import requests
+from filelock import FileLock
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -87,3 +91,63 @@ def _fetch_json(path: str, url: str):
     req.raise_for_status()
 
     return req.json()
+
+
+BUCKET_CACHE_NAME = "bucket"
+
+
+def _fetch_cacheable_json(
+    project: str,
+    asset: str,
+    version: str,
+    path: str,
+    cache: str,
+    url: str,
+    overwrite: bool,
+):
+    bucket_path = f"{project}/{asset}/{version}/{path}"
+
+    if cache is None:
+        return _fetch_json(bucket_path, url=url)
+    else:
+        _out_path = os.path.join(
+            cache, BUCKET_CACHE_NAME, project, asset, version, path
+        )
+        if os.path.exists(_out_path):
+            _lock = FileLock(_out_path)
+            with _lock:
+                _save_file(
+                    bucket_path, destination=_out_path, overwrite=overwrite, url=url
+                )
+
+        with open(_out_path) as jf:
+            return json.load(jf)
+
+
+def _save_file(
+    path: str, destination: str, overwrite: bool, url: str, error: bool = True
+):
+    if overwrite or not os.path.exists(destination):
+        os.makedirs(os.path.dirname(destination), exist_ok=True)
+
+        with tempfile.NamedTemporaryFile(
+            dir=os.path.dirname(destination), delete=False
+        ) as tmp_file:
+            try:
+                full_url = f"{url}/file/{quote(path)}"
+
+                req = requests.get(full_url, stream=True)
+                req.raise_for_status()
+
+                for chunk in req.iter_content(chunk_size=None):
+                    tmp_file.write(chunk)
+            except Exception as e:
+                if error:
+                    raise Exception(f"Failed to save '{path}'; {str(e)}.")
+                else:
+                    return False
+
+            # Rename the temporary file to the destination
+            shutil.move(tmp_file.name, destination)
+
+    return True
