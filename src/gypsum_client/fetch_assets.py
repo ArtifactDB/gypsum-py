@@ -189,16 +189,17 @@ def fetch_summary(
         overwrite=overwrite,
         url=url,
     )
+    print(_out)
 
     _out["upload_start"] = _cast_datetime(_out["upload_start"])
-    _out["upload_finish"] < -_cast_datetime(_out["upload_finish"])
+    _out["upload_finish"] = _cast_datetime(_out["upload_finish"])
 
-    if _out["on_probation"] is True and cache_dir is not None:
-        os.unlink(
-            os.file.path(
+    if "on_probation" in _out:
+        if _out["on_probation"] is True and cache_dir is not None:
+            _out_path = os.path.join(
                 cache_dir, BUCKET_CACHE_NAME, project, asset, version, "..summary"
             )
-        )
+            os.unlink(_out_path)
 
     return _out
 

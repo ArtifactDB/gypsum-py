@@ -1,12 +1,11 @@
 import json
 import os
-import re
 import shutil
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
-from urllib.parse import quote
+from urllib.parse import quote_plus
 
 import requests
 from filelock import FileLock
@@ -87,7 +86,7 @@ def _list_for_prefix(
 
 
 def _fetch_json(path: str, url: str):
-    full_url = f"{url}/file/{quote(path)}"
+    full_url = f"{url}/file/{quote_plus(path)}"
 
     req = requests.get(full_url)
     req.raise_for_status()
@@ -115,65 +114,44 @@ def _fetch_cacheable_json(
         _out_path = os.path.join(
             cache, BUCKET_CACHE_NAME, project, asset, version, path
         )
-        if os.path.exists(_out_path):
-            _lock = FileLock(_out_path)
-            with _lock:
-                _save_file(
-                    bucket_path, destination=_out_path, overwrite=overwrite, url=url
-                )
 
-        with open(_out_path) as jf:
+        _save_file(bucket_path, destination=_out_path, overwrite=overwrite, url=url)
+
+        with open(_out_path, "r") as jf:
             return json.load(jf)
 
 
 def _save_file(
     path: str, destination: str, overwrite: bool, url: str, error: bool = True
 ):
-    if overwrite or not os.path.exists(destination):
+    if overwrite is True or not os.path.exists(destination):
         os.makedirs(os.path.dirname(destination), exist_ok=True)
 
-        with tempfile.NamedTemporaryFile(
-            dir=os.path.dirname(destination), delete=False
-        ) as tmp_file:
-            try:
-                full_url = f"{url}/file/{quote(path)}"
+        _lock = FileLock(destination)
+        with _lock:
+            with tempfile.NamedTemporaryFile(
+                dir=os.path.dirname(destination), delete=False
+            ) as tmp_file:
+                try:
+                    full_url = f"{url}/file/{quote_plus(path)}"
 
-                req = requests.get(full_url, stream=True)
-                req.raise_for_status()
+                    req = requests.get(full_url, stream=True, verify=False)
+                    req.raise_for_status()
 
-                for chunk in req.iter_content(chunk_size=None):
-                    tmp_file.write(chunk)
-            except Exception as e:
-                if error:
-                    raise Exception(f"Failed to save '{path}'; {str(e)}.")
-                else:
-                    return False
+                    for chunk in req.iter_content(chunk_size=None):
+                        tmp_file.write(chunk)
+                except Exception as e:
+                    if error:
+                        raise Exception(f"Failed to save '{path}'; {str(e)}.")
+                    else:
+                        return False
 
-            # Rename the temporary file to the destination
-            shutil.move(tmp_file.name, destination)
+                # Rename the temporary file to the destination
+                shutil.move(tmp_file.name, destination)
 
     return True
 
 
-def _cast_datetime(x: list) -> list:
-    zend = [True if val.endswith("Z") else False for val in x]
-
-    for i, val in enumerate(x):
-        if zend[i]:
-            # strptime doesn't handle 'Z' offsets directly.
-            xz = x[i]
-            x[i] = xz[:-1] + "+0000"
-
-    if not all(zend):
-        # Remove colon in the timezone, which may confuse strptime.
-        for i, val in enumerate(x):
-            if not zend[i]:
-                x[i] = re.sub(":([0-9]{2})$", "\\1", val)
-
-    # Remove fractional seconds.
-    x = [re.sub("\\.[0-9]+", "", val) for val in x]
-
-    return [
-        datetime.strptime(val, "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=timezone.utc)
-        for val in x
-    ]
+def _cast_datetime(x):
+    # return datetime.strptime(x, "%Y-%m-%dT%H:%M:%SZ").astimezone(tz=timezone.utc)
+    return datetime.fromisoformat(x)
