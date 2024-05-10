@@ -66,13 +66,9 @@ def fetch_metadata_database(
             old_lastmod = float(old_lastmod_raw[0])
             new_lastmod = get_last_modified_date(base_url)
 
-            print(old_lastmod, new_lastmod)
-
             if new_lastmod is not None and old_lastmod == new_lastmod:
                 return cache_path
 
-    print("why is it here")
-    print(cache_path)
     _lock = FileLock(cache_path)
     with _lock:
         mod_path = cache_path + ".modified"
