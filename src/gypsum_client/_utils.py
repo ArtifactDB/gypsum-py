@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 import tempfile
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 from urllib.parse import quote_plus
@@ -41,12 +41,10 @@ def _cache_directory(dir: Optional[str] = None):
     if dir is None:
         return current
     else:
-        if not os.path.exists(current):
-            raise FileNotFoundError(
-                f"Path {current} does not exist or is not accessible."
-            )
+        if not os.path.exists(dir):
+            raise FileNotFoundError(f"Path {dir} does not exist or is not accessible.")
 
-        return current
+        return dir
 
 
 def _remove_slash_url(url: str):
@@ -153,5 +151,10 @@ def _save_file(
 
 
 def _cast_datetime(x):
-    # return datetime.strptime(x, "%Y-%m-%dT%H:%M:%SZ").astimezone(tz=timezone.utc)
-    return datetime.fromisoformat(x)
+    if x.endswith("Z"):
+        x = x[:-1]
+
+    # Remove fractional seconds.
+    x = x.split(".")[0]
+
+    return datetime.strptime(x, "%Y-%m-%dT%H:%M:%S").astimezone(tz=timezone.utc)

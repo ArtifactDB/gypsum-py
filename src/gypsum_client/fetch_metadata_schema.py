@@ -32,17 +32,19 @@ def fetch_metadata_schema(
     Returns:
         Path containing the downloaded schema.
     """
+    cache_path = None
     if cache_dir is None:
         cache_path = tempfile.mktemp(suffix=".json")
     else:
         cache_dir = os.path.join(_cache_directory(cache_dir), "schemas")
 
         cache_path = os.path.join(cache_dir, name)
-        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        if not os.path.exists(cache_path):
+            os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
         if os.path.exists(cache_path) and not overwrite:
             _lock = FileLock(cache_path)
-            with _lock:
+            if not _lock.is_locked:
                 return cache_path
 
     _lock = FileLock(cache_path)

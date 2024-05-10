@@ -189,7 +189,6 @@ def fetch_summary(
         overwrite=overwrite,
         url=url,
     )
-    print(_out)
 
     _out["upload_start"] = _cast_datetime(_out["upload_start"])
     _out["upload_finish"] = _cast_datetime(_out["upload_finish"])
