@@ -21,7 +21,7 @@ def _token_cache_path(cache_dir):
 
 def access_token(
     full: bool = False, request: bool = True, cache_dir: Optional[str] = None
-):
+) -> Optional[str]:
     """Get GitHub access token for authentication to the gypsum API's.
 
     Args:
@@ -86,7 +86,7 @@ def set_access_token(
     github_url: str = "https://api.github.com",
     user_agent: Optional[str] = None,
     cache_dir: Optional[str] = None,
-):
+) -> dict:
     """Set GitHub access token for authentication to the gypsum API's.
 
     Args:

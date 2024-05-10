@@ -22,7 +22,7 @@ def _config_cache_path(cache_dir):
 
 def public_s3_config(
     refresh: bool = False, url: str = _rest_url(), cache_dir: Optional[str] = None
-):
+) -> dict:
     """Get S3 configuration to the bucket storing the data.
 
     Users can use this downstream to access the bucket directly using boto3.

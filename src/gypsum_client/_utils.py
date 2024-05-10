@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from typing import Optional
+from urllib.parse import quote
 
 import requests
 
@@ -77,3 +78,12 @@ def _list_for_prefix(
         resp = [_remove_slash_url(val) for val in resp if not val.startswith("..")]
 
     return resp
+
+
+def _fetch_json(path: str, url: str):
+    full_url = f"{url}/file/{quote(path)}"
+
+    req = requests.get(full_url)
+    req.raise_for_status()
+
+    return req.json()
