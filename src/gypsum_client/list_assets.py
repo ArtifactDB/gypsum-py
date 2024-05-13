@@ -1,6 +1,7 @@
 import requests
 
 from ._utils import _list_for_prefix, _rest_url
+from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -99,7 +100,11 @@ def list_files(
     if prefix is not None:
         _prefix = f"{_prefix}{prefix}"
 
-    req = requests.get(f"{url}/list", params={"recursive": "true", "prefix": _prefix})
+    req = requests.get(
+        f"{url}/list",
+        params={"recursive": "true", "prefix": _prefix},
+        verify=REQUESTS_MOD["verify"],
+    )
     req.raise_for_status()
     resp = req.json()
 

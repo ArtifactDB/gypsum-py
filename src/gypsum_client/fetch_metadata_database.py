@@ -1,11 +1,13 @@
 import os
 import tempfile
 import time
+import warnings
 
 import requests
 from filelock import FileLock
 
 from ._utils import _cache_directory, _download_and_rename_file
+from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -96,10 +98,12 @@ def get_last_modified_date(base_url):
     mod_time = None
     try:
         url = base_url + "modified"
-        response = requests.get(url)
+        response = requests.get(url, verify=REQUESTS_MOD["verify"])
         mod_time = float(response.text)
     except Exception as e:
-        print("Failed to check the last modified timestamp:", str(e))
+        warnings.warn(
+            f"Failed to check the last modified timestamp: {str(e)}", UserWarning
+        )
 
     if mod_time is not None:
         LAST_CHECK["req_time"] = curtime
