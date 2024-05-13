@@ -1,0 +1,115 @@
+import atexit
+import os
+import shutil
+from typing import Optional
+
+from ._utils import (
+    BUCKET_CACHE_NAME,
+    _acquire_lock,
+    _cache_directory,
+    _release_lock,
+    _rest_url,
+)
+from .fetch_assets import fetch_manifest
+from .save_file import save_file
+
+__author__ = "Jayaram Kancherla"
+__copyright__ = "Jayaram Kancherla"
+__license__ = "MIT"
+
+
+def resolve_links(
+    project: str,
+    asset: str,
+    version: str,
+    cache_dir: Optional[str] = None,
+    overwrite: str = False,
+    url: str = _rest_url(),
+):
+    """Resolve links in the cache directory.
+
+    Create hard links (or copies, if filesystem links
+    are not supported) for linked-from files to their
+    link destinations.
+
+    Args:
+        project:
+            Project name.
+
+        asset:
+            Asset name.
+
+        version:
+            Version name.
+
+        cache_dir:
+            Path to the cache directory.
+
+        overwrite:
+            Whether to overwrite existing file in cache.
+
+        url:
+            URL to the gypsum compatible API.
+
+    Returns:
+        True if all links are resolved.
+    """
+    cache_dir = _cache_directory(cache_dir)
+    _acquire_lock(cache_dir, project, asset, version)
+
+    def release_lock_wrapper():
+        _release_lock(project, asset, version)
+
+    atexit.register(release_lock_wrapper)
+
+    # destination = os.path.join(cache_dir, BUCKET_CACHE_NAME, project, asset, version)
+    manifests = {}
+
+    self_manifest = fetch_manifest(
+        project, asset, version, cache_dir=cache_dir, url=url
+    )
+    manifests["/".join([project, asset, version])] = self_manifest
+
+    for kmf in self_manifest.keys():
+        entry = self_manifest[kmf]
+        if entry.get("link") is None:
+            continue
+
+        old_loc = os.path.join(project, asset, version, kmf)
+        if os.path.exists(old_loc) and not overwrite:
+            continue
+
+        link_data = entry["link"]
+        if link_data.get("ancestor") is not None:
+            link_data = link_data["ancestor"]
+
+        out = save_file(
+            link_data["project"],
+            link_data["asset"],
+            link_data["version"],
+            link_data["path"],
+            cache=cache_dir,
+            url=url,
+            overwrite=overwrite,
+        )
+        old_path = os.path.join(cache_dir, BUCKET_CACHE_NAME, old_loc)
+
+        try:
+            os.unlink(old_path)
+        except Exception:
+            pass
+
+        os.makedirs(os.path.dirname(old_path), exist_ok=True)
+
+        try:
+            os.link(out, old_path)
+        except Exception:
+            try:
+                os.symlink(out, old_path)
+            except Exception:
+                try:
+                    shutil.copy(out, old_path)
+                except Exception as e:
+                    raise ValueError(f"Failed to resolve link for '{kmf}': {e}")
+
+    return True

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 import tempfile
 from datetime import datetime, timezone
@@ -183,3 +184,35 @@ def _download_and_rename_file(url: str, dest: str):
             f.write(chunk)
 
     _rename_file(tmp, dest)
+
+
+IS_LOCKED = {"locks": {}}
+
+
+def _acquire_lock(cache: str, project: str, asset: str, version: str):
+    _key = f"{project}/{asset}/{version}"
+
+    if _key in IS_LOCKED["locks"] and IS_LOCKED["locks"][_key] is None:
+        _path = os.path.join(cache, "status", project, asset, version)
+        os.makedirs(os.path.dirname(_path), exist_ok=True)
+
+        _lock = FileLock(_path)
+        _lock.acquire()
+        IS_LOCKED["locks"][_key] = _lock
+
+
+def _release_lock(cache: str, project: str, asset: str, version: str):
+    _key = f"{project}/{asset}/{version}"
+
+    if _key in IS_LOCKED["locks"] and IS_LOCKED["locks"][_key] is not None:
+        _lock = IS_LOCKED["locks"][_key]
+        _lock.release()
+        del IS_LOCKED["locks"][_key]
+
+
+def _sanitize_path(x):
+    if os.name == "nt":
+        x = re.sub(r"\\\\", "/", x)
+
+    x = re.sub(r"//+", "/", x)
+    return x
