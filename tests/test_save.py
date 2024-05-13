@@ -1,48 +1,22 @@
 import os
-import shutil
+import tempfile
 
 import pytest
 from gypsum_client import save_file, save_version
-import tempfile
 
-# blah_contents = [
-#     "A",
-#     "B",
-#     "C",
-#     "D",
-#     "E",
-#     "F",
-#     "G",
-#     "H",
-#     "I",
-#     "J",
-#     "K",
-#     "L",
-#     "M",
-#     "N",
-#     "O",
-#     "P",
-#     "Q",
-#     "R",
-#     "S",
-#     "T",
-#     "U",
-#     "V",
-#     "W",
-#     "X",
-#     "Y",
-#     "Z",
-# ]
+__author__ = "Jayaram Kancherla"
+__copyright__ = "Jayaram Kancherla"
+__license__ = "MIT"
+
 blah_contents = (
     "A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ\n"
 )
-foobar_contents = '1 2 3 4 5\n6 7 8 9 10\n'
+foobar_contents = "1 2 3 4 5\n6 7 8 9 10\n"
 
 
 def test_save_file_works_as_expected():
     cache = tempfile.mkdtemp()
 
-    # cache = os.path.join(temp_dir, "cache")
     out = save_file("test-R", "basic", "v1", "blah.txt", cache_dir=cache)
     assert open(out, "r").read() == blah_contents
 
@@ -66,7 +40,6 @@ def test_save_file_works_as_expected():
 
 
 def test_save_file_works_via_links():
-    # cache = os.path.join(temp_dir, "cache")
     cache = tempfile.mkdtemp()
     out = save_file("test-R", "basic", "v2", "blah.txt", cache_dir=cache)
     assert open(out, "r").read() == blah_contents
@@ -83,7 +56,6 @@ def test_save_file_works_via_links():
 
 
 def test_save_version_works_as_expected_without_links():
-    # cache = os.path.join(temp_dir, "cache")
     cache = tempfile.mkdtemp()
 
     out = save_version("test-R", "basic", "v1", cache_dir=cache)
@@ -103,7 +75,6 @@ def test_save_version_works_as_expected_without_links():
     assert open(path, "r").read() == blah_contents
 
     # Also works concurrently.
-    # cache2 = os.path.join(temp_dir, "cache2")
     cache2 = tempfile.mkdtemp()
 
     out = save_version("test-R", "basic", "v1", cache_dir=cache2, concurrent=2)
@@ -126,7 +97,6 @@ def test_save_version_works_as_expected_without_links():
 
 
 def test_save_version_works_as_expected_with_links():
-    # cache = os.path.join(temp_dir, "cache")
     cache = tempfile.mkdtemp()
 
     out = save_version("test-R", "basic", "v2", cache_dir=cache)
@@ -140,7 +110,6 @@ def test_save_version_works_as_expected_with_links():
     )
 
     # Unless we turn off link resolution.
-    # cache = os.path.join(temp_dir, "cache")
     cache = tempfile.mkdtemp()
 
     out = save_version("test-R", "basic", "v2", cache_dir=cache, relink=False)
@@ -148,7 +117,6 @@ def test_save_version_works_as_expected_with_links():
     assert not os.path.exists(os.path.join(out, "foo", "bar.txt"))
 
     # Works recursively.
-    # cache = os.path.join(temp_dir, "cache")
     cache = tempfile.mkdtemp()
 
     out = save_version("test-R", "basic", "v3", cache_dir=cache)

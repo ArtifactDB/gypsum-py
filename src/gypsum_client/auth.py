@@ -7,6 +7,7 @@ from filelock import FileLock
 
 from ._github import github_access_token
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
+from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -125,7 +126,7 @@ def set_access_token(
             if user_agent:
                 headers["User-Agent"] = user_agent
 
-            r = requests.get(_url, headers=headers)
+            r = requests.get(_url, headers=headers, verify=REQUESTS_MOD["verify"])
             r.raise_for_status()
 
             _info = r.json()
@@ -145,7 +146,11 @@ def set_access_token(
 
     headers["Authorization"] = f"Bearer {token}"
 
-    token_req = requests.get(f"{_remove_slash_url(github_url)}/user", headers=headers)
+    token_req = requests.get(
+        f"{_remove_slash_url(github_url)}/user",
+        headers=headers,
+        verify=REQUESTS_MOD["verify"],
+    )
     token_req.raise_for_status()
 
     token_resp = token_req.json()

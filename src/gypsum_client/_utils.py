@@ -11,6 +11,8 @@ from urllib.parse import quote_plus
 import requests
 from filelock import FileLock
 
+from .config import REQUESTS_MOD
+
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
@@ -68,7 +70,7 @@ def _list_for_prefix(
     if prefix is not None:
         qparams["prefix"] = prefix
 
-    req = requests.get(url, params=qparams)
+    req = requests.get(url, params=qparams, verify=REQUESTS_MOD["verify"])
     req.raise_for_status()
 
     resp = req.json()
@@ -87,7 +89,7 @@ def _list_for_prefix(
 def _fetch_json(path: str, url: str):
     full_url = f"{url}/file/{quote_plus(path)}"
 
-    req = requests.get(full_url)
+    req = requests.get(full_url, verify=REQUESTS_MOD["verify"])
     req.raise_for_status()
 
     return req.json()
@@ -121,7 +123,12 @@ def _fetch_cacheable_json(
 
 
 def _save_file(
-    path: str, destination: str, overwrite: bool, url: str, error: bool = True
+    path: str,
+    destination: str,
+    overwrite: bool,
+    url: str,
+    error: bool = True,
+    verify: Optional[bool] = None,
 ):
     if overwrite is True or not os.path.exists(destination):
         os.makedirs(os.path.dirname(destination), exist_ok=True)
@@ -134,7 +141,10 @@ def _save_file(
                 try:
                     full_url = f"{url}/file/{quote_plus(path)}"
 
-                    req = requests.get(full_url, stream=True)
+                    if verify is None:
+                        verify = REQUESTS_MOD["verify"]
+
+                    req = requests.get(full_url, stream=True, verify=verify)
                     req.raise_for_status()
 
                     for chunk in req.iter_content(chunk_size=None):
@@ -177,7 +187,7 @@ def _rename_file(src: str, dest: str):
 
 def _download_and_rename_file(url: str, dest: str):
     tmp = tempfile.NamedTemporaryFile(dir=os.path.dirname(dest), delete=False).name
-    req = requests.get(url, stream=True)
+    req = requests.get(url, stream=True, verify=REQUESTS_MOD["verify"])
 
     with open(tmp, "wb") as f:
         for chunk in req.iter_content():

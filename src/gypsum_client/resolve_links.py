@@ -88,7 +88,7 @@ def resolve_links(
             link_data["asset"],
             link_data["version"],
             link_data["path"],
-            cache=cache_dir,
+            cache_dir=cache_dir,
             url=url,
             overwrite=overwrite,
         )

@@ -8,14 +8,23 @@ from ._utils import (
     _acquire_lock,
     _cache_directory,
     _release_lock,
+    _rest_url,
     _save_file,
 )
+from .config import REQUESTS_MOD
 from .list_assets import list_files
 from .resolve_links import resolve_links
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
+
+
+def _save_file_wrapper(args):
+    x, project, asset, version, destination, overwrite, url, verify = args
+    path = os.path.join(project, asset, version, x)
+    dest = os.path.join(destination, x)
+    _save_file(path=path, destination=dest, overwrite=overwrite, url=url, verify=verify)
 
 
 def save_version(
@@ -26,6 +35,7 @@ def save_version(
     overwrite: bool = False,
     relink: bool = True,
     concurrent: int = 1,
+    url: str = _rest_url(),
 ) -> str:
     """Download all files associated with a version of an asset
     of a project from the gypsum bucket.
@@ -70,22 +80,48 @@ def save_version(
     # If this version's directory was previously cached in its complete form, we skip it.
     completed = os.path.join(cache_dir, "status", project, asset, version, "COMPLETE")
     if not os.path.exists(completed) or overwrite:
-        listing = list_files(project, asset, version)
-
-        def save_file(x):
-            path = os.path.join(project, asset, version, x)
-            dest = os.path.join(destination, x)
-            _save_file(path=path, destination=dest, overwrite=overwrite)
+        listing = list_files(project, asset, version, url=url)
 
         if concurrent == 1:
             for file in listing:
-                save_file(file)
+                _save_file_wrapper(
+                    (
+                        file,
+                        project,
+                        asset,
+                        version,
+                        destination,
+                        overwrite,
+                        url,
+                        REQUESTS_MOD["verify"],
+                    )
+                )
         else:
+            _args = [
+                (
+                    file,
+                    project,
+                    asset,
+                    version,
+                    destination,
+                    overwrite,
+                    url,
+                    REQUESTS_MOD["verify"],
+                )
+                for file in listing
+            ]
             with Pool(concurrent) as pool:
-                pool.map(save_file, listing)
+                pool.map(_save_file_wrapper, _args)
 
         if relink:
-            resolve_links(project, asset, version, cache=cache_dir, overwrite=overwrite)
+            resolve_links(
+                project,
+                asset,
+                version,
+                cache_dir=cache_dir,
+                overwrite=overwrite,
+                url=url,
+            )
 
         # Marking it as complete.
         os.makedirs(os.path.dirname(completed), exist_ok=True)

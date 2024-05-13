@@ -7,6 +7,7 @@ import requests
 from filelock import FileLock
 
 from ._utils import _cache_directory, _rest_url
+from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -68,7 +69,7 @@ def public_s3_config(
                     CREDS_CACHE["info"][cache_dir] = creds
                     return creds
 
-    req = requests.get(url + "/credentials/s3-api")
+    req = requests.get(url + "/credentials/s3-api", verify=REQUESTS_MOD["verify"])
     creds = req.json()
 
     if cache_dir is None:

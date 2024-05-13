@@ -8,3 +8,8 @@
 """
 
 # import pytest
+
+##### ONLY IF CERITIFICATES ARE NOT SET #####
+# from gypsum_client.config import REQUESTS_MOD
+# REQUESTS_MOD["verify"] = False
+#####

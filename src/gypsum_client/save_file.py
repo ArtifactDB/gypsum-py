@@ -30,9 +30,9 @@ def _resolve_single_link(
     url: str,
 ) -> Optional[str]:
     if "/" in path:
-        lpath = f"{os.path.dirname(path)}/../links"
+        lpath = f"{os.path.dirname(path)}/..links"
     else:
-        lpath = "../links"
+        lpath = "..links"
 
     lobject = f"{project}/{asset}/{version}/{lpath}"
     ldestination = os.path.join(
@@ -42,13 +42,15 @@ def _resolve_single_link(
     _saved = _save_file(
         lobject, ldestination, overwrite=overwrite, url=url, error=False
     )
+
     if not _saved:
         return None
 
     with open(ldestination, "r") as f:
         link_info = json.load(f)
 
-    base = re.sub(r"\.*/", "", path)
+    base = re.sub(r".*/", "", path)
+
     if base not in link_info:
         return None
 
@@ -139,6 +141,7 @@ def save_file(
         link = _resolve_single_link(
             project, asset, version, path, cache_dir, overwrite=overwrite, url=url
         )
+
         if link is None:
             raise ValueError(f"'{path}' does not exist in the bucket.")
 

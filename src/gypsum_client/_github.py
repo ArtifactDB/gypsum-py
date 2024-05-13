@@ -4,6 +4,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import requests
 
+from .config import REQUESTS_MOD
+
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
@@ -59,7 +61,9 @@ def github_access_token(client_id, client_secret, authorization_url, token_url):
         "client_secret": client_secret,
         "code": AUTH_CODE,
     }
-    token_req = requests.post(token_url, headers=headers, json=parameters)
+    token_req = requests.post(
+        token_url, headers=headers, json=parameters, verify=REQUESTS_MOD["verify"]
+    )
     token_req.raise_for_status()
     token = token_req.json()["access_token"]
 

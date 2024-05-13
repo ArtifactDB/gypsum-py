@@ -5,6 +5,7 @@ import requests
 from filelock import FileLock
 
 from ._utils import _cache_directory
+from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -50,7 +51,7 @@ def fetch_metadata_schema(
     _lock = FileLock(cache_path)
     with _lock:
         url = "https://artifactdb.github.io/bioconductor-metadata-index/" + name
-        response = requests.get(url)
+        response = requests.get(url, verify=REQUESTS_MOD["verify"])
         with open(cache_path, "wb") as f:
             f.write(response.content)
 
