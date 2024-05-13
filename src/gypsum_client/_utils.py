@@ -201,7 +201,7 @@ def _acquire_lock(cache: str, project: str, asset: str, version: str):
         IS_LOCKED["locks"][_key] = _lock
 
 
-def _release_lock(cache: str, project: str, asset: str, version: str):
+def _release_lock(project: str, asset: str, version: str):
     _key = f"{project}/{asset}/{version}"
 
     if _key in IS_LOCKED["locks"] and IS_LOCKED["locks"][_key] is not None:
