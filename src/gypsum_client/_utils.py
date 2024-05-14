@@ -226,3 +226,16 @@ def _sanitize_path(x):
 
     x = re.sub(r"//+", "/", x)
     return x
+
+
+def _sanitize_uploaders(uploaders: list):
+    for current in uploaders:
+        if "until" in current:
+            current["until"] = (
+                datetime.strptime(current["until"], "%Y-%m-%dT%H:%M:%S%z").strftime(
+                    "%Y-%m-%dT%H:%M:%S%z"
+                )[:-2]
+                + ":"
+                + current["until"][-2:]
+            )
+    return uploaders
