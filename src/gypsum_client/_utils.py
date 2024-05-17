@@ -133,7 +133,7 @@ def _save_file(
     if overwrite is True or not os.path.exists(destination):
         os.makedirs(os.path.dirname(destination), exist_ok=True)
 
-        _lock = FileLock(destination)
+        _lock = FileLock(destination + ".lock")
         with _lock:
             with tempfile.NamedTemporaryFile(
                 dir=os.path.dirname(destination), delete=False
@@ -206,7 +206,7 @@ def _acquire_lock(cache: str, project: str, asset: str, version: str):
         _path = os.path.join(cache, "status", project, asset, version)
         os.makedirs(os.path.dirname(_path), exist_ok=True)
 
-        _lock = FileLock(_path)
+        _lock = FileLock(_path + ".lock")
         _lock.acquire()
         IS_LOCKED["locks"][_key] = _lock
 
@@ -239,3 +239,24 @@ def _sanitize_uploaders(uploaders: list):
                 + current["until"][-2:]
             )
     return uploaders
+
+
+# from https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook
+def is_notebook() -> bool:
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == "ZMQInteractiveShell":
+            return True  # Jupyter notebook or qtconsole
+        elif shell == "TerminalInteractiveShell":
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (?)
+    except NameError:
+        return False  # Probably standard Python interpreter
+
+
+# from https://stackoverflow.com/questions/6108330/checking-for-interactive-shell-in-a-python-script
+def _is_interactive():
+    import sys
+
+    return sys.__stdin__.isatty() or is_notebook()

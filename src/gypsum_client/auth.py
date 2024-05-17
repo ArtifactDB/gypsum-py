@@ -6,7 +6,7 @@ import requests
 from filelock import FileLock
 
 from ._github import github_access_token
-from ._utils import _cache_directory, _remove_slash_url, _rest_url
+from ._utils import _cache_directory, _is_interactive, _remove_slash_url, _rest_url
 from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
@@ -21,7 +21,10 @@ def _token_cache_path(cache_dir):
 
 
 def access_token(
-    full: bool = False, request: bool = True, cache_dir: Optional[str] = None
+    full: bool = False,
+    request: bool = True,
+    cache_dir: Optional[str] = _cache_directory(),
+    token_expiration_limit: int = 10,
 ) -> Optional[str]:
     """Get GitHub access token for authentication to the gypsum API's.
 
@@ -36,36 +39,39 @@ def access_token(
 
         cache_dir:
             Path to the cache directory to store tokens.
-            Defaults to None, indicating token is not cached to disk.
+            Can be set to `None`, indicating token is not cached to disk.
+
+        token_expiration_limit:
+            Integer specifying the number of seconds until the token expires.
 
     Returns:
         The GitHub token to access gypsum's resources.
     """
     global TOKEN_CACHE
-    expiry_leeway = 10  # number of seconds until use of the token.
 
     def _token_func(x):
         return x["token"] if not full else x
 
-    in_memory = TOKEN_CACHE.get("auth_info")
+    in_memory = TOKEN_CACHE.get("auth_info", None)
     if in_memory is not None:
-        if in_memory["expires"] > time.time() + expiry_leeway:
+        if in_memory["expires"] > time.time() + token_expiration_limit:
             return _token_func(in_memory)
         else:
             TOKEN_CACHE["auth_info"] = None
 
-    cache_dir = _cache_directory(cache_dir)
     if cache_dir is not None:
+        cache_dir = _cache_directory(cache_dir)
         cache_path = _token_cache_path(cache_dir)
+
         if os.path.exists(cache_path):
-            _lock = FileLock(cache_path)
+            _lock = FileLock(cache_path + ".lock")
             with _lock:
                 with open(cache_path, "r") as file:
-                    dump = file.read().splitlines()
+                    dump = file.read().splitlines() 
 
             if len(dump) > 0:
                 exp = float(dump[2])
-                if exp > time.time() + expiry_leeway:
+                if exp > time.time() + token_expiration_limit:
                     info = {"token": dump[0], "name": dump[1], "expires": exp}
                     TOKEN_CACHE["auth_info"] = info
                     return _token_func(info)
@@ -79,21 +85,23 @@ def access_token(
         return None
 
 
+TOKEN_AUTO = "auto"
+
+
 def set_access_token(
-    token: Optional[str] = None,
+    token: str = TOKEN_AUTO,
     app_url: str = _rest_url(),
     app_key: Optional[str] = None,
     app_secret: Optional[str] = None,
     github_url: str = "https://api.github.com",
     user_agent: Optional[str] = None,
-    cache_dir: Optional[str] = None,
+    cache_dir: Optional[str] = _cache_directory,
 ) -> dict:
     """Set GitHub access token for authentication to the gypsum API's.
 
     Args:
         token:
             A String containing Github's personal access token.
-            Defaults to None.
 
         app_url:
             URL to the gypsum REST API.
@@ -119,7 +127,24 @@ def set_access_token(
     """
     global TOKEN_CACHE
 
-    if not token:
+    cache_path = None
+    if cache_dir is not None:
+        cache_dir = _cache_directory(cache_dir)
+        cache_path = _token_cache_path(cache_dir)
+
+    if token is None:
+        TOKEN_CACHE["auth_info"] = None
+        if cache_path is not None:
+            os.unlink(cache_path)
+
+        return
+
+    if token is TOKEN_AUTO:
+        if not _is_interactive():
+            raise Exception(
+                "Running in non-interactive mode. Set the token manually using `set_access_token`."
+            )
+
         if not app_key or not app_secret:
             _url = f"{_remove_slash_url(app_url)}/credentials/github-app"
             headers = {}
@@ -140,6 +165,9 @@ def set_access_token(
             token_url="https://github.com/login/oauth/access_token",
         )
 
+    if token is None:
+        raise ValueError("'token' cannot be 'None'.")
+
     headers = {}
     if user_agent:
         headers["User-Agent"] = user_agent
@@ -156,14 +184,17 @@ def set_access_token(
     token_resp = token_req.json()
     name = token_resp["login"]
     expires_header = token_req.headers.get("github-authentication-token-expiration")
-    expiry = float(expires_header.split()[0]) if expires_header else float("inf")
+
+    expiry = float("inf")
+    if expires_header is not None:
+        expiry = float(expires_header.split(" ")[0])
 
     cache_dir = _cache_directory(cache_dir)
     if cache_dir is not None:
         cache_path = _token_cache_path(cache_dir)
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
-        _lock = FileLock(cache_path)
+        _lock = FileLock(cache_path + ".lock")
         with _lock:
             with open(cache_path, "w") as file:
                 file.write("\n".join([token, name, str(expiry)]))
