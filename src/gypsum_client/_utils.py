@@ -41,6 +41,8 @@ def _cache_directory(dir: Optional[str] = None):
         else:
             current = os.path.join(str(Path.home()), "gypsum", "cache")
 
+            os.makedirs(current, exist_ok=True)
+
     if dir is None:
         return current
     else:
