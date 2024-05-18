@@ -23,7 +23,7 @@ def start_upload(
     deduplicate: bool = True,
     probation: bool = False,
     url: str = _rest_url(),
-    token: str = access_token(),
+    token: str = None,
     directory: str = None,
 ):
     """Start an upload.
@@ -134,6 +134,9 @@ def start_upload(
                 }
             )
         formatted.extend(out_links)
+
+    if token is None:
+        token = access_token()
 
     url = _remove_slash_url(url)
     req = requests.post(

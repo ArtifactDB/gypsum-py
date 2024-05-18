@@ -10,9 +10,7 @@ __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
 
-def remove_asset(
-    project: str, asset: str, url: str = _rest_url(), token: str = access_token()
-):
+def remove_asset(project: str, asset: str, url: str = _rest_url(), token: str = None):
     """Remove an asset of a project from the gypsum backend.
 
     Args:
@@ -32,13 +30,16 @@ def remove_asset(
         True if asset was successfully removed.
     """
 
+    if token is None:
+        token = access_token()
+
     _key = f"{quote_plus(project)}/{quote_plus(asset)}"
     _request_removal(_key, url=url, token=token)
 
     return True
 
 
-def remove_project(project: str, url: str = _rest_url(), token: str = access_token()):
+def remove_project(project: str, url: str = _rest_url(), token: str = None):
     """Remove a project from the gypsum backend.
 
     Args:
@@ -54,6 +55,8 @@ def remove_project(project: str, url: str = _rest_url(), token: str = access_tok
     Returns:
         True if the project was successfully removed.
     """
+    if token is None:
+        token = access_token()
 
     _key = f"{quote_plus(project)}"
     _request_removal(_key, url=url, token=token)
@@ -66,7 +69,7 @@ def remove_version(
     asset: str,
     version: str,
     url: str = _rest_url(),
-    token: str = access_token(),
+    token: str = None,
 ):
     """Remove a project from the gypsum backend.
 
@@ -89,6 +92,10 @@ def remove_version(
     Returns:
         True if the version of the project was successfully removed.
     """
+
+    if token is None:
+        token = access_token()
+
     _key = f"{quote_plus(project)}/{quote_plus(asset)}/{quote_plus(version)}"
     _request_removal(_key, url=url, token=token)
 
