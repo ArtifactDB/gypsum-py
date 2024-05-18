@@ -110,7 +110,7 @@ def list_files(
     except Exception as e:
         raise Exception(
             f"Failed to list files in a project, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
     resp = req.json()
 
     resp = [val[_trunc:] for val in resp]

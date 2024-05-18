@@ -78,7 +78,7 @@ def _list_for_prefix(
     except Exception as e:
         raise Exception(
             f"Failed to access files from API, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
 
     resp = req.json()
     if only_dirs is True:
@@ -102,7 +102,7 @@ def _fetch_json(path: str, url: str):
     except Exception as e:
         raise Exception(
             f"Failed to access json from API, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
 
     return req.json()
 
@@ -162,13 +162,13 @@ def _save_file(
                     except Exception as e:
                         raise Exception(
                             f"Failed to save file from API, {req.status_code} and reason: {req.text}"
-                        )
+                        ) from e
 
                     for chunk in req.iter_content(chunk_size=None):
                         tmp_file.write(chunk)
                 except Exception as e:
                     if error:
-                        raise Exception(f"Failed to save '{path}'; {str(e)}.")
+                        raise Exception(f"Failed to save '{path}'; {str(e)}.") from e
                     else:
                         return False
 
@@ -199,7 +199,7 @@ def _rename_file(src: str, dest: str):
         except Exception as e:
             raise RuntimeError(
                 f"Cannot move temporary file for '{src}' to its destination '{dest}': {e}."
-            )
+            ) from e
 
 
 def _download_and_rename_file(url: str, dest: str):

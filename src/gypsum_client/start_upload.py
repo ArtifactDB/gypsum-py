@@ -25,7 +25,7 @@ def start_upload(
     url: str = _rest_url(),
     token: str = None,
     directory: str = None,
-):
+) -> dict:
     """Start an upload.
 
     Start an upload of a new version of an asset,
@@ -92,22 +92,24 @@ def start_upload(
         files = [files]
 
     _targets = []
-    if directory is not None:
-        for f in files:
+    for f in files:
+        if directory is not None:
             _targets.append(os.path.join(directory, f))
+        else:
+            _targets.append(f)
 
-    files = []
-    for _tg in _targets:
+    _files_info = []
+    for _tidx, _tg in enumerate(_targets):
         file_info = {
-            "path": _tg,
+            "path": files[_tidx],
             "size": os.path.getsize(_tg),
             "md5sum": hashlib.md5(open(_tg, "rb").read()).hexdigest(),
             "dedup": deduplicate,
         }
-        files.append(file_info)
+        _files_info.append(file_info)
 
     formatted = []
-    for _, file in enumerate(files):
+    for _, file in enumerate(_files_info):
         file_type = "simple" if file["dedup"] else "dedup"
         formatted.append(
             {
@@ -138,6 +140,8 @@ def start_upload(
     if token is None:
         token = access_token()
 
+    print("formatted:::", formatted)
+
     url = _remove_slash_url(url)
     req = requests.post(
         f"{url}/upload/start/{quote_plus(project)}/{quote_plus(asset)}/{quote_plus(version)}",
@@ -150,6 +154,13 @@ def start_upload(
     except Exception as e:
         raise Exception(
             f"Failed to start an upload, {req.status_code} and reason: {req.text}"
+        ) from e
+
+    resp = req.json()
+
+    if "status" in resp and resp["status"] == "error":
+        raise Exception(
+            f"Failed to upload, {req.status_code} and reason: {resp['reason']}"
         )
 
-    return req.json()
+    return resp

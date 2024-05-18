@@ -70,7 +70,8 @@ def github_access_token(client_id, client_secret, authorization_url, token_url):
     except Exception as e:
         raise Exception(
             f"Failed to access token, {token_req.status_code} and reason: {token_req.text}"
-        )
+        ) from e
+
     token = token_req.json()["access_token"]
 
     return token

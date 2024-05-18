@@ -15,7 +15,10 @@ except PackageNotFoundError:  # pragma: no cover
 finally:
     del version, PackageNotFoundError
 
+from .abort_upload import abort_upload
 from .auth import access_token, set_access_token
+from .clone_version import clone_version
+from .complete_upload import complete_upload
 from .fetch_assets import (
     fetch_latest,
     fetch_manifest,
@@ -27,7 +30,10 @@ from .fetch_assets import (
 from .fetch_metadata_database import fetch_metadata_database
 from .fetch_metadata_schema import fetch_metadata_schema
 from .list_assets import list_assets, list_files, list_projects, list_versions
+from .prepare_directory_for_upload import prepare_directory_upload
+from .remove_assets import remove_asset, remove_project, remove_version
+from .resolve_links import resolve_links
 from .s3_config import public_s3_config
 from .save_assets import save_version
 from .save_file import save_file
-from .resolve_links import resolve_links
+from .upload_assets import upload_directory, upload_files

@@ -114,6 +114,6 @@ def _request_removal(suffix: str, url: str, token: str):
     except Exception as e:
         raise Exception(
             f"Failed to remove assets in the project, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
 
     return True

@@ -86,6 +86,6 @@ def create_project(
     except Exception as e:
         raise Exception(
             f"Failed to create a project, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
 
     return True

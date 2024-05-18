@@ -110,6 +110,6 @@ def resolve_links(
                 try:
                     shutil.copy(out, old_path)
                 except Exception as e:
-                    raise ValueError(f"Failed to resolve link for '{kmf}': {e}")
+                    raise ValueError(f"Failed to resolve link for '{kmf}': {e}") from e
 
     return True

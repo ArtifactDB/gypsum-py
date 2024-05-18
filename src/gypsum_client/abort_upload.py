@@ -31,6 +31,6 @@ def abort_upload(init: dict, url=_rest_url()) -> dict:
     except Exception as e:
         raise Exception(
             f"Failed to abort the upload, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
 
     return True

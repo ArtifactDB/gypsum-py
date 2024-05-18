@@ -157,7 +157,7 @@ def set_access_token(
             except Exception as e:
                 raise Exception(
                     f"Failed to get access credentials from gypsum, {r.status_code} and reason: {r.text}"
-                )
+                ) from e
 
             _info = r.json()
             app_key = _info["id"]
@@ -189,7 +189,7 @@ def set_access_token(
     except Exception as e:
         raise Exception(
             f"Failed to access token from GitHub, {token_req.status_code} and reason: {token_req.text}"
-        )
+        ) from e
 
     token_resp = token_req.json()
     name = token_resp["login"]

@@ -30,6 +30,6 @@ def complete_upload(init: dict, url=_rest_url()) -> dict:
     except Exception as e:
         raise Exception(
             f"Failed to complete an upload session, {req.status_code} and reason: {req.text}"
-        )
+        ) from e
 
     return True

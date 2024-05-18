@@ -41,6 +41,6 @@ def validate_metadata(
     try:
         json_validate(instance=json.loads(metadata), schema=schema_data)
     except Exception as e:
-        raise ValueError(f"Metadata validation failed: {e}")
+        raise ValueError(f"Metadata validation failed: {e}") from e
 
     return True
