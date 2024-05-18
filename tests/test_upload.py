@@ -45,7 +45,6 @@ def test_upload_regular():
         for file in Path(tmp_dir).rglob("*")
         if not os.path.isdir(file)
     ]
-    print("files:", files)
 
     init = start_upload(
         project="test-Py",
@@ -57,8 +56,6 @@ def test_upload_regular():
         url=app_url,
     )
 
-    print(init)
-
     assert len(init["file_urls"]) == 2
     assert isinstance(init["abort_url"], str)
     assert isinstance(init["complete_url"], str)
@@ -67,6 +64,6 @@ def test_upload_regular():
     upload_files(init, directory=tmp_dir, url=app_url)
     complete_upload(init, url=app_url)
 
-    man = fetch_manifest("test-R", "upload", "1", cache=None, url=app_url)
-    assert sorted(man.keys()) == ["blah.txt", "foo/bar.txt"]
-    assert not any(man[file].get("link") is None for file in man)
+    man = fetch_manifest("test-Py", "upload", "1", cache_dir=None, url=app_url)
+    assert sorted(man.keys()) == ["blah.txt", "foo/blah.txt"]
+    assert all(man[file].get("link") is None for file in man.keys())

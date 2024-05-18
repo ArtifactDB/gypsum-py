@@ -18,8 +18,8 @@ def start_upload(
     project: str,
     asset: str,
     version: str,
-    files: Union[str, List[str]],
-    links: Union[str, List[str]] = None,
+    files: Union[str, List[str], List[dict]],
+    links: List[dict] = None,
     deduplicate: bool = True,
     probation: bool = False,
     url: str = _rest_url(),
@@ -45,6 +45,18 @@ def start_upload(
             A file path or a List of file paths to upload.
             These paths are assumed to be relative to the
             ``directory`` parameter.
+
+            Optionally, May be provided a list where each element
+            is a dictionary containing the following keys:
+            - ``path``: a string containing the relative path of the
+            file inside the version's subdirectory.
+            - ``size``, a non-negative integer specifying the size of the
+            file in bytes.
+            - ``md5sum``, a string containing the hex-encoded MD5
+            checksum of the file.
+            - Optionally ``dedup``, a boolean value indicating
+            whether deduplication should be attempted for each file. If this is
+            not available, the parameter ``deduplicate`` is used.
 
         links:
             A List containing a dictionary with the following keys:
@@ -91,22 +103,41 @@ def start_upload(
     if isinstance(files, str):
         files = [files]
 
-    _targets = []
-    for f in files:
-        if directory is not None:
-            _targets.append(os.path.join(directory, f))
-        else:
-            _targets.append(f)
+    _types_in_file = [type(f) for f in files]
 
-    _files_info = []
-    for _tidx, _tg in enumerate(_targets):
-        file_info = {
-            "path": files[_tidx],
-            "size": os.path.getsize(_tg),
-            "md5sum": hashlib.md5(open(_tg, "rb").read()).hexdigest(),
-            "dedup": deduplicate,
-        }
-        _files_info.append(file_info)
+    if len(set(_types_in_file)) > 1:
+        raise ValueError(
+            "All elements in 'files' must be strings or dicts, but not a mix."
+        )
+
+    _all_dict_in_files = all(isinstance(f, dict) for f in files)
+    if _all_dict_in_files is False:
+        _targets = []
+        for f in files:
+            if directory is not None:
+                _targets.append(os.path.join(directory, f))
+            else:
+                _targets.append(f)
+
+        _files_info = []
+        for _tidx, _tg in enumerate(_targets):
+            file_info = {
+                "path": files[_tidx],
+                "size": os.path.getsize(_tg),
+                "md5sum": hashlib.md5(open(_tg, "rb").read()).hexdigest(),
+                "dedup": deduplicate,
+            }
+            _files_info.append(file_info)
+    else:
+        _files_info = []
+        for f in files:
+            file_info = {
+                "path": f["path"],
+                "size": f["size"],
+                "md5sum": f["md5sum"],
+                "dedup": f["dedup"] if "dedup" in f else deduplicate,
+            }
+            _files_info.append(file_info)
 
     formatted = []
     for _, file in enumerate(_files_info):
@@ -139,8 +170,6 @@ def start_upload(
 
     if token is None:
         token = access_token()
-
-    print("formatted:::", formatted)
 
     url = _remove_slash_url(url)
     req = requests.post(
