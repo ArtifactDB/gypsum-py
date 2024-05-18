@@ -25,6 +25,11 @@ def complete_upload(init: dict, url=_rest_url()) -> dict:
         f"{url}{init['complete_url']}",
         headers={"Authorization": f"Bearer {init['session_token']}"},
     )
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to complete an upload session, {req.status_code} and reason: {req.text}"
+        )
 
     return True

@@ -67,7 +67,7 @@ def access_token(
             _lock = FileLock(cache_path + ".lock")
             with _lock:
                 with open(cache_path, "r") as file:
-                    dump = file.read().splitlines() 
+                    dump = file.read().splitlines()
 
             if len(dump) > 0:
                 exp = float(dump[2])
@@ -95,7 +95,7 @@ def set_access_token(
     app_secret: Optional[str] = None,
     github_url: str = "https://api.github.com",
     user_agent: Optional[str] = None,
-    cache_dir: Optional[str] = _cache_directory,
+    cache_dir: Optional[str] = _cache_directory(),
 ) -> dict:
     """Set GitHub access token for authentication to the gypsum API's.
 
@@ -152,7 +152,12 @@ def set_access_token(
                 headers["User-Agent"] = user_agent
 
             r = requests.get(_url, headers=headers, verify=REQUESTS_MOD["verify"])
-            r.raise_for_status()
+            try:
+                r.raise_for_status()
+            except Exception as e:
+                raise Exception(
+                    f"Failed to get access credentials from gypsum, {r.status_code} and reason: {r.text}"
+                )
 
             _info = r.json()
             app_key = _info["id"]
@@ -179,7 +184,12 @@ def set_access_token(
         headers=headers,
         verify=REQUESTS_MOD["verify"],
     )
-    token_req.raise_for_status()
+    try:
+        token_req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to access token from GitHub, {token_req.status_code} and reason: {token_req.text}"
+        )
 
     token_resp = token_req.json()
     name = token_resp["login"]

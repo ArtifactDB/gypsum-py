@@ -38,17 +38,12 @@ def remove_asset(
     return True
 
 
-def remove_project(
-    project: str, asset: str, url: str = _rest_url(), token: str = access_token()
-):
+def remove_project(project: str, url: str = _rest_url(), token: str = access_token()):
     """Remove a project from the gypsum backend.
 
     Args:
         project:
             Project name.
-
-        asset:
-            Asset name.
 
         url:
             URL of the gypsum REST API.
@@ -107,6 +102,11 @@ def _request_removal(suffix: str, url: str, token: str):
     headers["Authorization"] = f"Bearer {token}"
 
     req = requests.delete(f"{url}/remove/{suffix}", headers=headers)
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to remove assets in the project, {req.status_code} and reason: {req.text}"
+        )
 
     return True

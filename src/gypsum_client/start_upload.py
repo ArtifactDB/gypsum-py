@@ -142,6 +142,11 @@ def start_upload(
         headers={"Authorization": f"Bearer {token}"},
         verify=REQUESTS_MOD["verify"],
     )
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to start an upload, {req.status_code} and reason: {req.text}"
+        )
 
     return req.json()

@@ -19,8 +19,8 @@ def create_project(
     baseline: int = None,
     growth: int = None,
     year: int = None,
-    url=_rest_url(),
-    token=access_token(),
+    url: str = _rest_url(),
+    token: str = None,
 ):
     """Create a new project with the associated permissions.
 
@@ -60,6 +60,9 @@ def create_project(
     url = _remove_slash_url(url)
     uploaders = _sanitize_uploaders(uploaders) if uploaders is not None else []
 
+    if token is None:
+        token = access_token()
+
     quota = {}
     if baseline is not None:
         quota["baseline"] = baseline
@@ -69,7 +72,7 @@ def create_project(
         quota["year"] = year
 
     body = {"permissions": {"owners": owners, "uploaders": uploaders}}
-    if quota:
+    if len(quota) > 0:
         body["quota"] = quota
 
     req = requests.post(
@@ -78,6 +81,11 @@ def create_project(
         headers={"Authorization": "Bearer " + token},
         verify=REQUESTS_MOD["verify"],
     )
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to create a project, {req.status_code} and reason: {req.text}"
+        )
 
     return True

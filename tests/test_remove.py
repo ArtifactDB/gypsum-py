@@ -11,6 +11,8 @@ __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
+app_url = "https://gypsum-test.artifactdb.com"
+
 
 @pytest.mark.skipif(
     "gh_token" not in os.environ, reason="GitHub token not in environment"
@@ -20,30 +22,32 @@ def test_remove_functions():
     if gh_token is None:
         raise ValueError("GitHub token not in environment")
 
-    remove_project("test-R-remove", token=gh_token)
+    remove_project("test-Py-remove", url=app_url, token=gh_token)
 
-    create_project("test-R-remove", owners="jkanche", token=gh_token)
+    create_project("test-Py-remove", owners=["jkanche"], url=app_url, token=gh_token)
     for v in ["v1", "v2"]:
         init = start_upload(
-            project="test-R-remove",
+            project="test-Py-remove",
             asset="sacrifice",
             version=v,
             files=[],
             token=gh_token,
+            url=app_url,
         )
-        complete_upload(init)
 
-    fetch_manifest("test-R-remove", "sacrifice", "v2", cache_dir=None)
-    remove_version("test-R-remove", "sacrifice", "v2", token=gh_token)
-    with pytest.raises(Exception):
-        fetch_manifest("test-R-remove", "sacrifice", "v2", cache_dir=None)
+        complete_upload(init, url=app_url)
 
-    assert fetch_latest("test-R-remove", "sacrifice") == "v1"
-    remove_asset("test-R-remove", "sacrifice", token=gh_token)
+    fetch_manifest("test-Py-remove", "sacrifice", "v2", url=app_url, cache_dir=None)
+    remove_version("test-Py-remove", "sacrifice", "v2", url=app_url, token=gh_token)
     with pytest.raises(Exception):
-        fetch_latest("test-R-remove", "sacrifice")
+        fetch_manifest("test-Py-remove", "sacrifice", "v2", url=app_url, cache_dir=None)
 
-    fetch_usage("test-R-remove")
-    remove_project("test-R-remove", token=gh_token)
+    assert fetch_latest("test-Py-remove", "sacrifice", url=app_url) == "v1"
+    remove_asset("test-Py-remove", "sacrifice", url=app_url, token=gh_token)
     with pytest.raises(Exception):
-        fetch_usage("test-R-remove")
+        fetch_latest("test-Py-remove", "sacrifice", url=app_url)
+
+    fetch_usage("test-Py-remove", url=app_url)
+    remove_project("test-Py-remove", url=app_url, token=gh_token)
+    with pytest.raises(Exception):
+        fetch_usage("test-Py-remove", url=app_url)

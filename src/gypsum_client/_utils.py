@@ -73,7 +73,12 @@ def _list_for_prefix(
         qparams["prefix"] = prefix
 
     req = requests.get(url, params=qparams, verify=REQUESTS_MOD["verify"])
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to access files from API, {req.status_code} and reason: {req.text}"
+        )
 
     resp = req.json()
     if only_dirs is True:
@@ -92,7 +97,12 @@ def _fetch_json(path: str, url: str):
     full_url = f"{url}/file/{quote_plus(path)}"
 
     req = requests.get(full_url, verify=REQUESTS_MOD["verify"])
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to access json from API, {req.status_code} and reason: {req.text}"
+        )
 
     return req.json()
 
@@ -147,7 +157,12 @@ def _save_file(
                         verify = REQUESTS_MOD["verify"]
 
                     req = requests.get(full_url, stream=True, verify=verify)
-                    req.raise_for_status()
+                    try:
+                        req.raise_for_status()
+                    except Exception as e:
+                        raise Exception(
+                            f"Failed to save file from API, {req.status_code} and reason: {req.text}"
+                        )
 
                     for chunk in req.iter_content(chunk_size=None):
                         tmp_file.write(chunk)

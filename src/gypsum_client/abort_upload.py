@@ -25,6 +25,12 @@ def abort_upload(init: dict, url=_rest_url()) -> dict:
         f"{url}{init['abort_url']}",
         headers={"Authorization": f"Bearer {init['session_token']}"},
     )
-    req.raise_for_status()
+
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to abort the upload, {req.status_code} and reason: {req.text}"
+        )
 
     return True
