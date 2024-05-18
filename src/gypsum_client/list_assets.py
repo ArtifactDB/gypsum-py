@@ -105,7 +105,12 @@ def list_files(
         params={"recursive": "true", "prefix": _prefix},
         verify=REQUESTS_MOD["verify"],
     )
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to list files in a project, {req.status_code} and reason: {req.text}"
+        ) from e
     resp = req.json()
 
     resp = [val[_trunc:] for val in resp]

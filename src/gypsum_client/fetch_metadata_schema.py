@@ -44,11 +44,11 @@ def fetch_metadata_schema(
             os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
         if os.path.exists(cache_path) and not overwrite:
-            _lock = FileLock(cache_path)
+            _lock = FileLock(cache_path + ".lock")
             if not _lock.is_locked:
                 return cache_path
 
-    _lock = FileLock(cache_path)
+    _lock = FileLock(cache_path + ".lock")
     with _lock:
         url = "https://artifactdb.github.io/bioconductor-metadata-index/" + name
         response = requests.get(url, verify=REQUESTS_MOD["verify"])

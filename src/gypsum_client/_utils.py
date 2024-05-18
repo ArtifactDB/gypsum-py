@@ -41,6 +41,8 @@ def _cache_directory(dir: Optional[str] = None):
         else:
             current = os.path.join(str(Path.home()), "gypsum", "cache")
 
+            os.makedirs(current, exist_ok=True)
+
     if dir is None:
         return current
     else:
@@ -71,7 +73,12 @@ def _list_for_prefix(
         qparams["prefix"] = prefix
 
     req = requests.get(url, params=qparams, verify=REQUESTS_MOD["verify"])
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to access files from API, {req.status_code} and reason: {req.text}"
+        ) from e
 
     resp = req.json()
     if only_dirs is True:
@@ -90,7 +97,12 @@ def _fetch_json(path: str, url: str):
     full_url = f"{url}/file/{quote_plus(path)}"
 
     req = requests.get(full_url, verify=REQUESTS_MOD["verify"])
-    req.raise_for_status()
+    try:
+        req.raise_for_status()
+    except Exception as e:
+        raise Exception(
+            f"Failed to access json from API, {req.status_code} and reason: {req.text}"
+        ) from e
 
     return req.json()
 
@@ -133,7 +145,7 @@ def _save_file(
     if overwrite is True or not os.path.exists(destination):
         os.makedirs(os.path.dirname(destination), exist_ok=True)
 
-        _lock = FileLock(destination)
+        _lock = FileLock(destination + ".lock")
         with _lock:
             with tempfile.NamedTemporaryFile(
                 dir=os.path.dirname(destination), delete=False
@@ -145,13 +157,18 @@ def _save_file(
                         verify = REQUESTS_MOD["verify"]
 
                     req = requests.get(full_url, stream=True, verify=verify)
-                    req.raise_for_status()
+                    try:
+                        req.raise_for_status()
+                    except Exception as e:
+                        raise Exception(
+                            f"Failed to save file from API, {req.status_code} and reason: {req.text}"
+                        ) from e
 
                     for chunk in req.iter_content(chunk_size=None):
                         tmp_file.write(chunk)
                 except Exception as e:
                     if error:
-                        raise Exception(f"Failed to save '{path}'; {str(e)}.")
+                        raise Exception(f"Failed to save '{path}'; {str(e)}.") from e
                     else:
                         return False
 
@@ -162,13 +179,14 @@ def _save_file(
 
 
 def _cast_datetime(x):
+    # Remove fractional seconds.
+    if "." in x:
+        x = x.split(".")[0]
+
     if x.endswith("Z"):
         x = x[:-1]
 
-    # Remove fractional seconds.
-    x = x.split(".")[0]
-
-    return datetime.strptime(x, "%Y-%m-%dT%H:%M:%S").astimezone(tz=timezone.utc)
+    return datetime.strptime(x, "%Y-%m-%dT%H:%M:%S")
 
 
 def _rename_file(src: str, dest: str):
@@ -182,7 +200,7 @@ def _rename_file(src: str, dest: str):
         except Exception as e:
             raise RuntimeError(
                 f"Cannot move temporary file for '{src}' to its destination '{dest}': {e}."
-            )
+            ) from e
 
 
 def _download_and_rename_file(url: str, dest: str):
@@ -206,7 +224,7 @@ def _acquire_lock(cache: str, project: str, asset: str, version: str):
         _path = os.path.join(cache, "status", project, asset, version)
         os.makedirs(os.path.dirname(_path), exist_ok=True)
 
-        _lock = FileLock(_path)
+        _lock = FileLock(_path + ".lock")
         _lock.acquire()
         IS_LOCKED["locks"][_key] = _lock
 
@@ -226,3 +244,36 @@ def _sanitize_path(x):
 
     x = re.sub(r"//+", "/", x)
     return x
+
+
+def _sanitize_uploaders(uploaders: list):
+    for current in uploaders:
+        if "until" in current:
+            _cur_until = current["until"]
+            if isinstance(_cur_until, str):
+                _cur_until = _cast_datetime(_cur_until)
+
+            current["until"] = _cur_until.isoformat().replace("+00:00", "Z")
+
+    return uploaders
+
+
+# from https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook
+def is_notebook() -> bool:
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == "ZMQInteractiveShell":
+            return True  # Jupyter notebook or qtconsole
+        elif shell == "TerminalInteractiveShell":
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (?)
+    except NameError:
+        return False  # Probably standard Python interpreter
+
+
+# from https://stackoverflow.com/questions/6108330/checking-for-interactive-shell-in-a-python-script
+def _is_interactive():
+    import sys
+
+    return sys.__stdin__.isatty() or is_notebook()

@@ -61,7 +61,7 @@ def fetch_metadata_database(
         if os.path.exists(cache_path) and not overwrite:
             old_lastmod_raw = None
 
-            _lock = FileLock(cache_path)
+            _lock = FileLock(cache_path + ".lock")
             if not _lock.is_locked:
                 old_lastmod_raw = open(cache_path + ".modified").readlines()
 
@@ -71,7 +71,7 @@ def fetch_metadata_database(
             if new_lastmod is not None and old_lastmod == new_lastmod:
                 return cache_path
 
-    _lock = FileLock(cache_path)
+    _lock = FileLock(cache_path + ".lock")
     with _lock:
         mod_path = cache_path + ".modified"
         _download_and_rename_file(base_url + "modified", mod_path)

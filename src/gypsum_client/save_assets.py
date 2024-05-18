@@ -82,7 +82,7 @@ def save_version(
     if not os.path.exists(completed) or overwrite:
         listing = list_files(project, asset, version, url=url)
 
-        if concurrent == 1:
+        if concurrent <= 1:
             for file in listing:
                 _save_file_wrapper(
                     (

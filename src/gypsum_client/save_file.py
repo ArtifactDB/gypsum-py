@@ -154,6 +154,8 @@ def save_file(
                 try:
                     shutil.copy(link, destination)
                 except Exception as e:
-                    raise ValueError(f"Failed to resolve link for '{path}': {e}.")
+                    raise ValueError(
+                        f"Failed to resolve link for '{path}': {e}."
+                    ) from e
 
     return destination

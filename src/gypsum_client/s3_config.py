@@ -58,7 +58,7 @@ def public_s3_config(
 
             cache_path = _config_cache_path(cache_dir)
             if os.path.exists(cache_path):
-                _lock = FileLock(cache_path)
+                _lock = FileLock(cache_path + ".lock")
                 with _lock:
                     with open(cache_dir, "r") as f:
                         creds = json.load(f)
@@ -79,7 +79,7 @@ def public_s3_config(
         config_path = _config_cache_path(cache_dir)
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
 
-        with FileLock(config_path):
+        with FileLock(config_path + ".lock"):
             with open(config_path, "w") as f:
                 json.dump(creds, f)
 
