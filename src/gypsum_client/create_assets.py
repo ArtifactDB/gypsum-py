@@ -17,7 +17,7 @@ def create_project(
     owners: List[str],
     uploaders: List[str] = [],
     baseline: int = None,
-    growth: int = None,
+    growth_rate: int = None,
     year: int = None,
     url: str = _rest_url(),
     token: str = None,
@@ -42,7 +42,7 @@ def create_project(
         baseline:
             Baseline quote in bytes.
 
-        growth:
+        growth_rate:
             Expected annual growth rate in bytes.
 
         year:
@@ -66,8 +66,10 @@ def create_project(
     quota = {}
     if baseline is not None:
         quota["baseline"] = baseline
-    if growth is not None:
-        quota["growth_rate"] = growth
+
+    if growth_rate is not None:
+        quota["growth_rate"] = growth_rate
+
     if year is not None:
         quota["year"] = year
 

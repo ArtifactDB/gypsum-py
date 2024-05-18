@@ -179,13 +179,14 @@ def _save_file(
 
 
 def _cast_datetime(x):
+    # Remove fractional seconds.
+    if "." in x:
+        x = x.split(".")[0]
+
     if x.endswith("Z"):
         x = x[:-1]
 
-    # Remove fractional seconds.
-    x = x.split(".")[0]
-
-    return datetime.strptime(x, "%Y-%m-%dT%H:%M:%S").astimezone(tz=timezone.utc)
+    return datetime.strptime(x, "%Y-%m-%dT%H:%M:%S")
 
 
 def _rename_file(src: str, dest: str):
@@ -248,13 +249,12 @@ def _sanitize_path(x):
 def _sanitize_uploaders(uploaders: list):
     for current in uploaders:
         if "until" in current:
-            current["until"] = (
-                datetime.strptime(current["until"], "%Y-%m-%dT%H:%M:%S%z").strftime(
-                    "%Y-%m-%dT%H:%M:%S%z"
-                )[:-2]
-                + ":"
-                + current["until"][-2:]
-            )
+            _cur_until = current["until"]
+            if isinstance(_cur_until, str):
+                _cur_until = _cast_datetime(_cur_until)
+
+            current["until"] = _cur_until.isoformat().replace("+00:00", "Z")
+
     return uploaders
 
 
