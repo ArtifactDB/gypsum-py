@@ -1,4 +1,4 @@
-from gypsum_client.list_assets import (
+from gypsum_client.list_operations import (
     list_assets,
     list_files,
     list_projects,

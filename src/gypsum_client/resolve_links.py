@@ -10,8 +10,7 @@ from ._utils import (
     _release_lock,
     _rest_url,
 )
-from .fetch_assets import fetch_manifest
-from .save_file import save_file
+from .fetch_operations import fetch_manifest
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -54,6 +53,8 @@ def resolve_links(
     Returns:
         True if all links are resolved.
     """
+    from .save_operations import save_file
+
     cache_dir = _cache_directory(cache_dir)
     _acquire_lock(cache_dir, project, asset, version)
 

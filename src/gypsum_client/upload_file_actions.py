@@ -4,12 +4,11 @@ from multiprocessing import Pool
 import requests
 
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
-from .abort_upload import abort_upload
+from .upload_api_operations import abort_upload, complete_upload
 from .auth import access_token
-from .complete_upload import complete_upload
 from .config import REQUESTS_MOD
 from .prepare_directory_for_upload import prepare_directory_upload
-from .start_upload import start_upload
+from .upload_api_operations import start_upload
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
