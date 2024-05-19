@@ -39,5 +39,6 @@ from .resolve_links import resolve_links
 from .s3_config import public_s3_config
 from .save_assets import save_version
 from .save_file import save_file
+from .search_metadata import search_metadata_text, define_text_query
 from .set_ops import set_permissions, set_quota
 from .upload_assets import upload_directory, upload_files
