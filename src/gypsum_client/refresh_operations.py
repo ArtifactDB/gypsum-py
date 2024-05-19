@@ -22,6 +22,16 @@ def refresh_latest(
     This is useful on rare occasions where multiple simultaneous
     uploads cause the latest version to be slightly out of sync.
 
+    See Also:
+        :py:func:`~gypsum_client.fetch_operations.fetch_latest`,
+        to fetch the latest version without recomputing.
+
+    Example:
+
+        .. code-block:: python
+
+            ver = refresh_latest("test-R", "basic")
+
     Args:
         project:
             Project name.
@@ -65,6 +75,16 @@ def refresh_usage(project: str, url: str = _rest_url(), token: str = None) -> in
     Recompute the usage of a project.
     This is useful on rare occasions where multiple simultaneous
     uploads cause the usage calculations to be out of sync.
+
+    See Also:
+        :py:func:`~gypsum_client.fetch_operations.fetch_usage`,
+        to fetch the usage without recomputing.
+
+    Example:
+
+        .. code-block:: python
+
+            ver = refresh_usage("test-R", "basic")
 
     Args:
         project:

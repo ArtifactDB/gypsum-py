@@ -31,6 +31,17 @@ def resolve_links(
     are not supported) for linked-from files to their
     link destinations.
 
+    Example:
+
+        .. code-block:: python
+
+            cache = tempfile()
+
+            save_version("test-R", "basic", "v3", relink=False, cache_dir=cache)
+            list_files(cache_dir, recursive=True, all_files=True)
+
+            resolve_links("test-R", "basic", "v3", cache_dir=cache)
+
     Args:
         project:
             Project name.

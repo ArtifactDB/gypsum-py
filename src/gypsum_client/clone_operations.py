@@ -1,3 +1,43 @@
+"""Clone a version's directory structure.
+
+Cloning of a versioned asset involves creating a directory at the destination
+that has the same contents as the corresponding project-asset-version directory.
+All files in the specified version are represented as symlinks from the
+destination to the corresponding file in the cache.
+The idea is that, when the destination is used in
+:py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`,
+the symlinks are converted into upload links, i.e., ``links=`` in
+:py:func:`~gypsum_client.upload_api_operations.start_upload`.
+This allows users to create new versions very cheaply as duplicate files
+are not uploaded to/stored in the backend.
+
+Users can more-or-less do whatever they want inside the cloned destination,
+but they should treat the symlink targets as read-only.
+That is, they should not modify the contents of the linked-to file, as these
+refer to assumed-immutable files in the cache.
+If a file in the destination needs to be modified, the symlink should be
+deleted and replaced with an actual file;
+this avoids mutating the cache and it ensures that
+:py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`
+recognizes that a new file actually needs to be uploaded.
+
+Advanced users can set ``download=False``, in which case symlinks are created
+even if their targets are not present in the cache.
+In such cases, the destination should be treated as write-only due to the
+potential presence of dangling symlinks.
+This mode is useful for uploading a new version of an asset without
+downloading the files from the existing version,
+assuming that the modifications associated with the former can be
+achieved without reading any of the latter.
+
+On Windows, the user may not have permissions to create symbolic links,
+so the function will transparently fall back to creating hard links or
+copies instead.
+This precludes any optimization by prepare_directory_upload as the hard
+links/copies cannot be converted into upload links.
+It also assumes that download=True as dangling links/copies cannot be created.
+"""
+
 import errno
 import os
 import shutil
@@ -26,42 +66,20 @@ def clone_version(
     Clone the directory structure for a versioned asset into a separate location.
     This is typically used to prepare a new version for a lightweight upload.
 
-    Cloning of a versioned asset involves creating a directory at the destination
-    that has the same contents as the corresponding project-asset-version directory.
-    All files in the specified version are represented as symlinks from the
-    destination to the corresponding file in the cache.
-    The idea is that, when the destination is used in
-    :py:func:`~gypsum_client.prepare_directory_upload.prepare_directory_upload`,
-    the symlinks are converted into upload links, i.e., links= in
-    :py:func:`~gypsum_client.start_upload.start_upload`.
-    This allows users to create new versions very cheaply as duplicate files
-    are not uploaded to/stored in the backend.
+    See Also:
+        :py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`,
+        to prepare an upload based on the directory contents.
 
-    Users can more-or-less do whatever they want inside the cloned destination,
-    but they should treat the symlink targets as read-only.
-    That is, they should not modify the contents of the linked-to file, as these
-    refer to assumed-immutable files in the cache.
-    If a file in the destination needs to be modified, the symlink should be
-    deleted and replaced with an actual file;
-    this avoids mutating the cache and it ensures that
-    :py:func:`~gypsum_client.prepare_directory_upload.prepare_directory_upload`
-    recognizes that a new file actually needs to be uploaded.
+    Example:
 
-    Advanced users can set download=False, in which case symlinks are created
-    even if their targets are not present in the cache.
-    In such cases, the destination should be treated as write-only due to the
-    potential presence of dangling symlinks.
-    This mode is useful for uploading a new version of an asset without
-    downloading the files from the existing version,
-    assuming that the modifications associated with the former can be
-    achieved without reading any of the latter.
+        .. code-block:: python
 
-    On Windows, the user may not have permissions to create symbolic links,
-    so the function will transparently fall back to creating hard links or
-    copies instead.
-    This precludes any optimization by prepare_directory_upload as the hard
-    links/copies cannot be converted into upload links.
-    It also assumes that download=True as dangling links/copies cannot be created.
+            import tempfile
+
+            cache = tempfile.mkdtemp()
+            dest = tempfile.mkdtemp()
+
+            clone_version("test-R", "basic", "v1", destination=dest, cache_dir=cache)
 
     Args:
         project:

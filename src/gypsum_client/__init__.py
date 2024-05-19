@@ -18,6 +18,7 @@ finally:
 
 from .auth import access_token, set_access_token
 from .clone_operations import clone_version
+from .config import REQUESTS_MOD
 from .create_operations import create_project
 from .fetch_metadata_database import fetch_metadata_database
 from .fetch_metadata_schema import fetch_metadata_schema

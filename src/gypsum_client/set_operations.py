@@ -22,6 +22,24 @@ def set_quota(
     """
     Set the quota for a project.
 
+    See Also:
+        :py:func:`~gypsum_client.fetch_operations.fetch_quota`,
+        to fetch the usage details.
+
+    Example:
+
+        .. code-block:: python
+
+            create_project("test-Py-quota", owners=["jkanche"])
+
+            set_quota(
+                "test-Py-quota",
+                baseline=1234,
+                growth_rate=5678,
+                year=2020
+            )
+
+
     Args:
         project:
             The project name.
@@ -83,6 +101,27 @@ def set_permissions(
 ):
     """
     Set the owner and uploader permissions for a project.
+
+    See Also:
+        :py:func:`~gypsum_client.fetch_operations.fetch_permission`,
+        to fetch the permissions for a project.
+
+    Example:
+
+        .. code-block:: python
+
+            create_project("test-Py-perms", owners=["jkanche"])
+
+            until = (
+                (datetime.now() + timedelta(seconds=1000000))
+                .replace(microsecond=0)
+            )
+
+            set_permissions(
+                "test-Py-perms",
+                owners=["LTLA"],
+                uploaders=[{"id": "LTLA", "until": until}]
+            )
 
     Args:
         project:

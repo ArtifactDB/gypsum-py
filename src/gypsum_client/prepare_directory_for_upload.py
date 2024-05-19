@@ -1,3 +1,59 @@
+"""Prepare to upload a directory's contents.
+
+Files in `directory` (that are not symlinks) are used as
+regular uploads, i.e., `files=` in
+:py:func:`~gypsum_client.upload_api_operations.start_upload`.
+
+If `directory` contains a symlink to a file in `cache`,
+we assume that it points to a file that was previously downloaded
+by, e.g., :py:func:`~gypsum_client.upload_api_operations.save_file` or
+:py:func:`~gypsum_client.upload_api_operations.save_version`.
+Thus, instead of performing a regular upload, we attempt to
+create an upload link, i.e., ``links=`` in
+:py:func:`~gypsum_client.upload_api_operations.start_upload`.
+This is achieved by examining the destination path of the
+symlink and inferring the link destination in the backend.
+Note that this still works if the symlinks are dangling.
+
+If a symlink cannot be converted into an upload link, it will
+be used as a regular upload, i.e., the contents of the symlink
+destination will be uploaded by
+:py:func:`~gypsum_client.upload_api_operations.start_upload`.
+In this case, an error will be raised if the symlink is dangling
+as there is no file that can actually be uploaded.
+If ``links="always"``, an error is raised instead upon symlink
+conversion failure.
+
+This function is intended to be used with
+:py:func:`~gypsum_client.clone_operations.clone_version`,
+which creates symlinks to files in `cache`.
+
+See Also:
+    :py:func:`~gypsum_client.upload_api_operations.start_upload`,
+    to actually start the upload.
+
+    :py:func:`~gypsum_client.clone_operations.clone_version`,
+    to prepare the symlinks.
+
+Example:
+
+    .. code-block:: python
+
+        import tempfile
+        cache = tempfile.mkdtemp()
+        dest = tempfile.mkdtemp()
+
+        # Clone a project
+        clone_version("test-R", "basic", "v1", destination=dest, cache_dir=cache)
+
+        # Make some modification
+        with open(os.path.join(dest, "heanna"), "w") as f:
+            f.write("sumire")
+
+        # Prepare the directory for upload
+        prepped = prepare_directory_upload(dest, cache_dir=cache)
+"""
+
 import os
 from typing import Literal
 
@@ -23,29 +79,6 @@ def prepare_directory_upload(
     This goes through the directory to list its contents and
     convert symlinks to upload links.
 
-    Files in `directory` (that are not symlinks) are used as
-    regular uploads, i.e., `files=` in `start_upload`.
-
-    If `directory` contains a symlink to a file in `cache`,
-    we assume that it points to a file that was previously downloaded
-    by, e.g., `save_file` or `save_version`.
-    Thus, instead of performing a regular upload, we attempt to
-    create an upload link, i.e., `links=` in `start_upload`.
-    This is achieved by examining the destination path of the
-    symlink and inferring the link destination in the backend.
-    Note that this still works if the symlinks are dangling.
-
-    If a symlink cannot be converted into an upload link, it will
-    be used as a regular upload, i.e., the contents of the symlink
-    destination will be uploaded by `start_upload`.
-    In this case, an error will be raised if the symlink is dangling
-    as there is no file that can actually be uploaded.
-    If `links="always"`, an error is raised instead upon symlink
-    conversion failure.
-
-    This function is intended to be used with `clone_version`,
-    which creates symlinks to files in `cache`.
-
     Args:
         directory:
             Path to a directory, the contents of which are to be
@@ -55,11 +88,11 @@ def prepare_directory_upload(
             Indicate how to handle symlinks in `directory`.
             Must be one of the following:
             - "auto": Will attempt to convert symlinks into upload links.
-                If the conversion fails, a regular upload is performed.
+            If the conversion fails, a regular upload is performed.
             - "always": Will attempt to convert symlinks into upload links.
-                If the conversion fails, an error is raised.
+            If the conversion fails, an error is raised.
             - "never": Will never attempt to convert symlinks into upload
-                links. All symlinked files are treated as regular uploads.
+            links. All symlinked files are treated as regular uploads.
 
         cache_dir:
             Path to the cache directory, used to convert symlinks into upload links.
@@ -67,9 +100,10 @@ def prepare_directory_upload(
     Returns:
         Dictionary containing:
         - `files`: list of strings to be used as `files=`
-            in :py:func:`~gypsum_client.start_upload.start_upload`.
+        in :py:func:`~gypsum_client.start_upload.start_upload`.
         - `links`: dictionary to be used as `links=` in
-            :py:func:`~gypsum_client.start_upload.start_upload`.
+        :py:func:`~gypsum_client.start_upload.start_upload`.
+
     """
     _links_options = ["auto", "always", "never"]
     if links not in _links_options:
