@@ -114,14 +114,7 @@ def prepare_directory_upload(
     cache_dir = _cache_directory(cache_dir)
 
     out_files = []
-
-    out_links = {
-        "from_path": [],
-        "to_project": [],
-        "to_asset": [],
-        "to_version": [],
-        "to_path": [],
-    }
+    out_links = []
 
     cache_dir = _normalize_and_sanitize_path(cache_dir)
     if not cache_dir.endswith("/"):
@@ -150,11 +143,15 @@ def prepare_directory_upload(
             dest = _normalize_and_sanitize_path(dest)
             dest_components = _match_path_to_cache(dest, cache_dir)
             if dest_components:
-                out_links["from_path"].append(rel_path)
-                out_links["to_project"].append(dest_components["project"])
-                out_links["to_asset"].append(dest_components["asset"])
-                out_links["to_version"].append(dest_components["version"])
-                out_links["to_path"].append(dest_components["path"])
+                out_links.append(
+                    {
+                        "from.path": rel_path,
+                        "to.project": dest_components["project"],
+                        "to.asset": dest_components["asset"],
+                        "to.version": dest_components["version"],
+                        "to.path": dest_components["path"],
+                    }
+                )
                 continue
 
             if links == "always":

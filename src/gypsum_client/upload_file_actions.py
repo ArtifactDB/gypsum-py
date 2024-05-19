@@ -31,7 +31,7 @@ def upload_directory(
 
     This function is a wrapper around
     :py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`
-    and :py:func:`~gypsum_client.upload_api_operations.start_upload` and friends.
+    and :py:func:`~gypsum_client.upload_api_operations.start_upload` and others.
 
     The aim is to streamline the upload of a directory's contents
     when no customization of the file listing is required.
@@ -46,31 +46,17 @@ def upload_directory(
 
             tmp_dir = tempfile.mkdtemp()
 
-            with open(f"{tmp_dir}/blah.txt", "w") as f:
-                f.write(blah_contents)
+            with open(os.path.join(tmp, "blah.txt"), "w") as f:
+                f.write("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-            os.makedirs(f"{tmp_dir}/foo", exist_ok=True)
+            os.makedirs(os.path.join(tmp, "foo"))
+            with open(os.path.join(tmp, "foo", "bar.txt"), "w") as f:
+                f.write("\n".join(map(str, range(1, 11))))
 
-            with open(f"{tmp_dir}/foo/blah.txt", "w") as f:
-                f.write(foobar_contents)
-
-            files = [
-                str(file.relative_to(tmp_dir))
-                for file in Path(tmp_dir).rglob("*")
-                if not os.path.isdir(file)
-            ]
-
-            init = start_upload(
-                project="test-Py",
-                asset="probation",
-                version="v1",
-                files=[],
-                probation=True,
+            upload_directory(
+                tmp, "test-Py",
+                "upload-dir", version="1"
             )
-
-            upload_files(init, directory=tmp_dir)
-            complete_upload(init)
-            reject_probation("test-Py", "probation", "v1")
 
     Args:
         directory:
