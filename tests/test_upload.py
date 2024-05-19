@@ -174,7 +174,7 @@ def test_upload_directory():
     if gh_token is None:
         raise ValueError("GitHub token not in environment")
 
-    remove_asset("test-R", asset="upload-dir", token=gh_token, url=app_url)
+    remove_asset("test-Py", asset="upload-dir", token=gh_token, url=app_url)
 
     tmp = tempfile.mkdtemp()
     try:
