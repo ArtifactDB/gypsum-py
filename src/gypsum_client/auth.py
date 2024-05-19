@@ -64,7 +64,7 @@ def access_token(
         cache_path = _token_cache_path(cache_dir)
 
         if os.path.exists(cache_path):
-            _lock = FileLock(cache_path + ".lock")
+            _lock = FileLock(cache_path + ".LOCK")
             with _lock:
                 with open(cache_path, "r") as file:
                     dump = file.read().splitlines()
@@ -204,7 +204,7 @@ def set_access_token(
         cache_path = _token_cache_path(cache_dir)
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
-        _lock = FileLock(cache_path + ".lock")
+        _lock = FileLock(cache_path + ".LOCK")
         with _lock:
             with open(cache_path, "w") as file:
                 file.write("\n".join([token, name, str(expiry)]))

@@ -3,8 +3,8 @@ import os
 import shutil
 
 from ._utils import BUCKET_CACHE_NAME, _cache_directory, _rest_url
-from .fetch_assets import fetch_manifest
-from .save_assets import save_version
+from .fetch_operations import fetch_manifest
+from .save_operations import save_version
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"

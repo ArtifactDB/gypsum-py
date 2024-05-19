@@ -4,7 +4,7 @@ import tempfile
 from datetime import datetime
 
 import pytest
-from gypsum_client.fetch_assets import (
+from gypsum_client.fetch_operations import (
     fetch_latest,
     fetch_manifest,
     fetch_permissions,

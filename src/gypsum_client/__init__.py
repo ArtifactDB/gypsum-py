@@ -15,12 +15,13 @@ except PackageNotFoundError:  # pragma: no cover
 finally:
     del version, PackageNotFoundError
 
-from .abort_upload import abort_upload
+
 from .auth import access_token, set_access_token
-from .clone_version import clone_version
-from .complete_upload import complete_upload
-from .create_assets import create_project
-from .fetch_assets import (
+from .clone_operations import clone_version
+from .create_operations import create_project
+from .fetch_metadata_database import fetch_metadata_database
+from .fetch_metadata_schema import fetch_metadata_schema
+from .fetch_operations import (
     fetch_latest,
     fetch_manifest,
     fetch_permissions,
@@ -28,16 +29,15 @@ from .fetch_assets import (
     fetch_summary,
     fetch_usage,
 )
-from .fetch_metadata_database import fetch_metadata_database
-from .fetch_metadata_schema import fetch_metadata_schema
-from .list_assets import list_assets, list_files, list_projects, list_versions
+from .list_operations import list_assets, list_files, list_projects, list_versions
 from .prepare_directory_for_upload import prepare_directory_upload
-from .probation import approve_probation, reject_probation
-from .refresh_ops import refresh_latest, refresh_usage
-from .remove_assets import remove_asset, remove_project, remove_version
+from .probation_operations import approve_probation, reject_probation
+from .refresh_operations import refresh_latest, refresh_usage
+from .remove_operations import remove_asset, remove_project, remove_version
 from .resolve_links import resolve_links
 from .s3_config import public_s3_config
-from .save_assets import save_version
-from .save_file import save_file
-from .set_ops import set_permissions, set_quota
-from .upload_assets import upload_directory, upload_files
+from .save_operations import save_file, save_version
+from .search_metadata import define_text_query, search_metadata_text
+from .set_operations import set_permissions, set_quota
+from .upload_api_operations import abort_upload, complete_upload, start_upload
+from .upload_file_actions import upload_directory, upload_files

@@ -145,7 +145,7 @@ def _save_file(
     if overwrite is True or not os.path.exists(destination):
         os.makedirs(os.path.dirname(destination), exist_ok=True)
 
-        _lock = FileLock(destination + ".lock")
+        _lock = FileLock(destination + ".LOCK")
         with _lock:
             with tempfile.NamedTemporaryFile(
                 dir=os.path.dirname(destination), delete=False
@@ -224,7 +224,7 @@ def _acquire_lock(cache: str, project: str, asset: str, version: str):
         _path = os.path.join(cache, "status", project, asset, version)
         os.makedirs(os.path.dirname(_path), exist_ok=True)
 
-        _lock = FileLock(_path + ".lock")
+        _lock = FileLock(_path + ".LOCK")
         _lock.acquire()
         IS_LOCKED["locks"][_key] = _lock
 

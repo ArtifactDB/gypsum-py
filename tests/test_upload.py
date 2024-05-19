@@ -3,11 +3,13 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from gypsum_client.complete_upload import complete_upload
-from gypsum_client.fetch_assets import fetch_manifest
-from gypsum_client.remove_assets import remove_asset
-from gypsum_client.start_upload import start_upload
-from gypsum_client.upload_assets import upload_files
+from gypsum_client import (
+    complete_upload,
+    fetch_manifest,
+    remove_asset,
+    start_upload,
+    upload_files,
+)
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"

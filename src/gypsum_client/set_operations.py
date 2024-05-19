@@ -4,7 +4,7 @@ import requests
 
 from ._utils import _remove_slash_url, _rest_url, _sanitize_uploaders
 from .auth import access_token
-from .fetch_assets import fetch_permissions
+from .fetch_operations import fetch_permissions
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
