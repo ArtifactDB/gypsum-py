@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from urllib.parse import quote_plus
 
 import requests
@@ -14,7 +14,7 @@ __license__ = "MIT"
 
 def create_project(
     project: str,
-    owners: List[str],
+    owners: Union[str, List[str]],
     uploaders: List[str] = [],
     baseline: int = None,
     growth_rate: int = None,
@@ -24,6 +24,20 @@ def create_project(
 ):
     """Create a new project with the associated permissions.
 
+    See Also:
+        :py:func:`~gypsum_client.remove_operations.remove_project`,
+        to remove the project.
+
+    Example:
+
+        .. code-block:: python
+
+            createProject(
+                "test-Py-create",
+                owners="jkanche",
+                uploaders=[{"id": "ArtifactDB-bot"}]
+            )
+
     Args:
         project:
             Project name.
@@ -31,6 +45,8 @@ def create_project(
         owners:
             List of GitHub users or organizations that are owners of this
             project.
+
+            May also be a string containing the Github user or organization.
 
         uploaders:
             List of authorized uploaders for this project.
@@ -53,9 +69,7 @@ def create_project(
 
         token:
             GitHub access token to authenticate with the gypsum REST API.
-
-    Returns:
-        True if project is successfully created.
+            The token must refer to a gypsum administrator account.
     """
     url = _remove_slash_url(url)
     uploaders = _sanitize_uploaders(uploaders) if uploaders is not None else []
@@ -73,6 +87,9 @@ def create_project(
     if year is not None:
         quota["year"] = year
 
+    if isinstance(owners, str):
+        owners = [owners]
+
     body = {"permissions": {"owners": owners, "uploaders": uploaders}}
     if len(quota) > 0:
         body["quota"] = quota
@@ -89,5 +106,3 @@ def create_project(
         raise Exception(
             f"Failed to create a project, {req.status_code} and reason: {req.text}"
         ) from e
-
-    return True

@@ -20,6 +20,31 @@ def approve_probation(
 
     This removes the ``on_probation`` tag from the uploaded version.
 
+    See Also:
+        :py:func:`~gypsum_client.upload_api_operations.start_upload`,
+        to specify probational upload.
+
+        :py:func:`~.reject_probation`,
+        to reject the probational upload..
+
+    Example:
+
+        .. code-block:: python
+
+            init = start_upload(
+                project="test-Py",
+                asset="probation",
+                version="v1",
+                files=[],
+                probation=True
+            )
+
+            complete_upload(init)
+            approve_probation("test-Py", "probation", "v1")
+
+            # Cleanup if this is just for testing
+            remove_asset("test-Py", "probation")
+
     Args:
         project:
             Project name.
@@ -61,6 +86,28 @@ def reject_probation(
     """Reject a probational upload.
 
     This removes all files associated with that version.
+
+    See Also:
+        :py:func:`~gypsum_client.upload_api_operations.start_upload`,
+        to specify probational upload.
+
+        :py:func:`~.approve_probation`,
+        to approve the probational upload..
+
+    Example:
+
+        .. code-block:: python
+
+            init = start_upload(
+                project="test-Py",
+                asset="probation",
+                version="v1",
+                files=[],
+                probation=True
+            )
+
+            complete_upload(init)
+            reject_probation("test-Py", "probation", "v1")
 
     Args:
         project:

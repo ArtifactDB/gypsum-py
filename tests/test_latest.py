@@ -18,6 +18,6 @@ def test_refresh_latest():
     if gh_token is None:
         raise ValueError("GitHub token not in environment")
 
-    ver = refresh_latest("test-Py", "upload", url=app_url, token=gh_token)
-    assert ver == "1"
-    assert fetch_latest("test-Py", "upload", url=app_url) == ver
+    ver = refresh_latest("test-R", "basic", url=app_url, token=gh_token)
+    assert ver == "v3"
+    assert fetch_latest("test-R", "basic", url=app_url) == ver

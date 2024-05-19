@@ -44,6 +44,16 @@ def save_version(
     """Download all files associated with a version of an asset
     of a project from the gypsum bucket.
 
+    See Also:
+
+        :py:func:`~.save_file`, to save a single file.
+
+    Example:
+
+        .. code-block:: python
+
+            out <- save_version("test-R", "basic", "v1")
+
     Args:
         project:
             Project name.
@@ -202,6 +212,18 @@ def save_file(
 
     Download a file from the gypsum bucket, for a version of
     an asset of a project.
+
+    See Also:
+
+        :py:func:`~.save_version`, to save all files associated
+        with a version.
+
+    Example:
+
+        .. code-block:: python
+
+            out <- save_version("test-R", "basic", "v1", "blah.txt")
+
 
     Args:
         project:

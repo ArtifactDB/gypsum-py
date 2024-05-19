@@ -31,6 +31,50 @@ def start_upload(
     Start an upload of a new version of an asset,
     or a new asset of a project.
 
+    See Also:
+        :py:func:`~gypsum_client.upload_file_operations.upload_files`,
+        to actually upload the files.
+
+        :py:func:`~.complete_upload`,
+        to indicate that the upload is completed.
+
+        :py:func:`~.abort_upload`,
+        to abort an upload in progress.
+
+        :py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`,
+        to create ``files`` and ``links`` from a directory.
+
+    Example:
+
+        .. code-block:: python
+
+            import tempfile
+            tmp_dir = tempfile.mkdtemp()
+
+            with open(f"{tmp_dir}/blah.txt", "w") as f:
+                f.write(blah_contents)
+
+            os.makedirs(f"{tmp_dir}/foo", exist_ok=True)
+
+            with open(f"{tmp_dir}/foo/blah.txt", "w") as f:
+                f.write(foobar_contents)
+
+            files = [
+                str(file.relative_to(tmp_dir))
+                for file in Path(tmp_dir).rglob("*")
+                if not os.path.isdir(file)
+            ]
+
+            init = start_upload(
+                project="test-Py-demo",
+                asset="upload",
+                version="1",
+                files=files,
+                directory=tmp_dir,
+            )
+
+            abort_upload(init)
+
     Args:
         project:
             Project name.
@@ -57,6 +101,7 @@ def start_upload(
             - Optionally ``dedup``, a boolean value indicating
             whether deduplication should be attempted for each file. If this is
             not available, the parameter ``deduplicate`` is used.
+
 
         links:
             A List containing a dictionary with the following keys:
@@ -194,18 +239,53 @@ def start_upload(
 
     return resp
 
-def complete_upload(init: dict, url=_rest_url()) -> dict:
+
+def complete_upload(init: dict, url=_rest_url()):
     """Complete an upload session after all files have been uploaded.
+
+    See Also:
+        :py:func:`~gypsum_client.upload_api_operations.start_upload`,
+        to create the init.
+
+    Example:
+
+        .. code-block:: python
+
+            import tempfile
+            tmp_dir = tempfile.mkdtemp()
+
+            with open(f"{tmp_dir}/blah.txt", "w") as f:
+                f.write(blah_contents)
+
+            os.makedirs(f"{tmp_dir}/foo", exist_ok=True)
+
+            with open(f"{tmp_dir}/foo/blah.txt", "w") as f:
+                f.write(foobar_contents)
+
+            files = [
+                str(file.relative_to(tmp_dir))
+                for file in Path(tmp_dir).rglob("*")
+                if not os.path.isdir(file)
+            ]
+
+            init = start_upload(
+                project="test-Py-demo",
+                asset="upload",
+                version="1",
+                files=files,
+                directory=tmp_dir,
+            )
+
+            abort_upload(init)
 
     Args:
         init:
             Dictionary containing ``complete_url`` and ``session_token``.
 
+            :py:func:`~.start_upload`, to create ``init``.
+
         url:
             URL to the gypsum REST API.
-
-    Returns:
-        True after completion.
     """
     url = _remove_slash_url(url)
     req = requests.post(
@@ -219,20 +299,53 @@ def complete_upload(init: dict, url=_rest_url()) -> dict:
             f"Failed to complete an upload session, {req.status_code} and reason: {req.text}"
         ) from e
 
-    return True
 
-def abort_upload(init: dict, url=_rest_url()) -> dict:
+def abort_upload(init: dict, url=_rest_url()):
     """Abort an upload session, usually after an irrecoverable error.
+
+    See Also:
+        :py:func:`~gypsum_client.upload_api_operations.start_upload`,
+        to create the init.
+
+    Example:
+
+        .. code-block:: python
+
+            import tempfile
+            tmp_dir = tempfile.mkdtemp()
+
+            with open(f"{tmp_dir}/blah.txt", "w") as f:
+                f.write(blah_contents)
+
+            os.makedirs(f"{tmp_dir}/foo", exist_ok=True)
+
+            with open(f"{tmp_dir}/foo/blah.txt", "w") as f:
+                f.write(foobar_contents)
+
+            files = [
+                str(file.relative_to(tmp_dir))
+                for file in Path(tmp_dir).rglob("*")
+                if not os.path.isdir(file)
+            ]
+
+            init = start_upload(
+                project="test-Py-demo",
+                asset="upload",
+                version="1",
+                files=files,
+                directory=tmp_dir,
+            )
+
+            complete_upload(init)
 
     Args:
         init:
             Dictionary containing ``abort_url`` and ``session_token``.
 
+            :py:func:`~.start_upload`, to create ``init``.
+
         url:
             URL to the gypsum REST API.
-
-    Returns:
-        True after completion.
     """
     url = _remove_slash_url(url)
     req = requests.post(
@@ -246,5 +359,3 @@ def abort_upload(init: dict, url=_rest_url()) -> dict:
         raise Exception(
             f"Failed to abort the upload, {req.status_code} and reason: {req.text}"
         ) from e
-
-    return True

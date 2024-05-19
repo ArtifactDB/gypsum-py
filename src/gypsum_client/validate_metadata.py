@@ -13,6 +13,33 @@ def validate_metadata(
 ) -> bool:
     """Validate metadata against a JSON schema for a SQLite database.
 
+    See Also:
+        :py:func:`~gypsum_client.fetch_metadata_schema.fetch_metadata_schema`, to get
+        the JSON schema.
+
+        :py:func:`~gypsum_client.fetch_metadata_database.fetch_metadata_database`,
+        to obtain the SQLite database of metadata.
+
+    Example:
+
+        .. code-block:: python
+
+            _cache_dir = tempfile.mkdtemp()
+
+            metadata = {
+                "title": "Fatherhood",
+                "description": "Luke ich bin dein Vater.",
+                "sources": [{"provider": "GEO", "id": "GSE12345"}],
+                "taxonomy_id": ["9606"],
+                "genome": ["GRCm38"],
+                "maintainer_name": "Darth Vader",
+                "maintainer_email": "vader@empire.gov",
+                "bioconductor_version": "3.10",
+            }
+
+            schema = fetch_metadata_schema(cache_dir=_cache_dir)
+            validate_metadata(metadata, schema)
+
     Args:
         metadata:
             Metadata to be checked.

@@ -4,11 +4,10 @@ from multiprocessing import Pool
 import requests
 
 from ._utils import _cache_directory, _remove_slash_url, _rest_url
-from .upload_api_operations import abort_upload, complete_upload
 from .auth import access_token
 from .config import REQUESTS_MOD
 from .prepare_directory_for_upload import prepare_directory_upload
-from .upload_api_operations import start_upload
+from .upload_api_operations import abort_upload, complete_upload, start_upload
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -31,8 +30,8 @@ def upload_directory(
     """Upload a directory to the gypsum backend.
 
     This function is a wrapper around
-    :py:func:`~gypsum_client.prepare_directory_upload.prepare_directory_upload`
-    and :py:func:`~gypsum_client.start_upload.start_upload` and friends.
+    :py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`
+    and :py:func:`~gypsum_client.upload_api_operations.start_upload` and others.
 
     The aim is to streamline the upload of a directory's contents
     when no customization of the file listing is required.
@@ -40,6 +39,24 @@ def upload_directory(
     Convenience method to upload a directory to the gypsum backend
     as a versioned asset of a project. This requires uploader permissions
     to the relevant project.
+
+    Example:
+
+        .. code-block:: python
+
+            tmp_dir = tempfile.mkdtemp()
+
+            with open(os.path.join(tmp, "blah.txt"), "w") as f:
+                f.write("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+            os.makedirs(os.path.join(tmp, "foo"))
+            with open(os.path.join(tmp, "foo", "bar.txt"), "w") as f:
+                f.write("\n".join(map(str, range(1, 11))))
+
+            upload_directory(
+                tmp, "test-Py",
+                "upload-dir", version="1"
+            )
 
     Args:
         directory:
@@ -57,10 +74,10 @@ def upload_directory(
 
         cache_dir:
             Path to the cache for saving files, e.g., in
-            :py:func:`~gypsum_client.save_assets.save_version`.
+            :py:func:`~gypsum_client.save_operations.save_version`.
 
             Used to convert symbolic links to upload links,see
-            :py:func:`~gypsum_client.prepare_directory_upload.prepare_directory_upload`.
+            :py:func:`~gypsum_client.prepare_directory_for_upload.prepare_directory_upload`.
 
         deduplicate:
             Whether the backend should attempt deduplication of ``files``

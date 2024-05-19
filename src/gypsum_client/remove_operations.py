@@ -13,6 +13,28 @@ __license__ = "MIT"
 def remove_asset(project: str, asset: str, url: str = _rest_url(), token: str = None):
     """Remove an asset of a project from the gypsum backend.
 
+    See Also:
+        :py:func:`~.remove_project`,
+        to remove a project.
+
+        :py:func:`~.remove_version`,
+        to remove a specific version.
+
+    Example:
+
+        .. code-block:: python
+
+            # Mock a project
+            init = start_upload(
+                project="test-Py-remove",
+                asset="mock-remove",
+                version="v1",
+                files=[],
+            )
+
+            complete_upload(init)
+            remove_asset("test-Py-remove", "mock-remove")
+
     Args:
         project:
             Project name.
@@ -25,6 +47,7 @@ def remove_asset(project: str, asset: str, url: str = _rest_url(), token: str = 
 
         token:
             GitHub access token to authenticate to the gypsum REST API.
+            The token must refer to a gypsum administrator account.
 
     Returns:
         True if asset was successfully removed.
@@ -42,6 +65,23 @@ def remove_asset(project: str, asset: str, url: str = _rest_url(), token: str = 
 def remove_project(project: str, url: str = _rest_url(), token: str = None):
     """Remove a project from the gypsum backend.
 
+    See Also:
+        :py:func:`~gypsum_client.create_operations.create_project`,
+        to create a project.
+
+        :py:func:`~.remove_asset`,
+        to remove a specific asset.
+
+        :py:func:`~.remove_version`,
+        to remove a specific version.
+
+    Example:
+
+        .. code-block:: python
+
+            create_project("test-Py-remove", owners=["jkanche"])
+            remove_project("test-Py-remove")
+
     Args:
         project:
             Project name.
@@ -51,6 +91,7 @@ def remove_project(project: str, url: str = _rest_url(), token: str = None):
 
         token:
             GitHub access token to authenticate to the gypsum REST API.
+            The token must refer to a gypsum administrator account.
 
     Returns:
         True if the project was successfully removed.
@@ -72,6 +113,29 @@ def remove_version(
     token: str = None,
 ):
     """Remove a project from the gypsum backend.
+    
+    See Also:
+        :py:func:`~.remove_asset`,
+        to remove a specific asset.
+
+        :py:func:`~.remove_version`,
+        to remove a specific version.
+
+    Example:
+
+        .. code-block:: python
+
+            # Mock a project
+            init = start_upload(
+                project="test-Py-remove",
+                asset="mock-remove",
+                version="v1",
+                files=[],
+            )
+
+            complete_upload(init)
+
+            remove_version("test-Py-remove", "mock-remove", "v1")
 
     Args:
         project:

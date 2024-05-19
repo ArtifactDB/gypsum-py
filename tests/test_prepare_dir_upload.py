@@ -20,18 +20,26 @@ def test_prepare_directory_upload_works_as_expected():
     prepped = prepare_directory_upload(dest, cache_dir=cache)
     if os.name == "nt":  # Windows
         assert prepped["files"] == ["blah.txt", "foo/bar.txt", "heanna"]
-        assert len(prepped["links"]["from_path"]) == 0
+        assert len(prepped["links"]) == 0
     else:  # Unix
         assert prepped["files"] == ["heanna"]
-        assert prepped["links"]["from_path"] == ["blah.txt", "foo/bar.txt"]
-        assert prepped["links"]["to_project"] == ["test-R", "test-R"]
-        assert prepped["links"]["to_asset"] == ["basic", "basic"]
-        assert prepped["links"]["to_version"] == ["v1", "v1"]
-        assert prepped["links"]["to_path"] == ["blah.txt", "foo/bar.txt"]
+        assert sorted(x["from.path"] for x in prepped["links"]) == sorted(
+            ["blah.txt", "foo/bar.txt"]
+        )
+        assert sorted(x["to.project"] for x in prepped["links"]) == sorted(
+            ["test-R", "test-R"]
+        )
+        assert sorted(x["to.asset"] for x in prepped["links"]) == sorted(
+            ["basic", "basic"]
+        )
+        assert sorted(x["to.version"] for x in prepped["links"]) == sorted(["v1", "v1"])
+        assert sorted(x["to.path"] for x in prepped["links"]) == sorted(
+            ["blah.txt", "foo/bar.txt"]
+        )
 
     prepped = prepare_directory_upload(dest, cache_dir=cache, links="never")
     assert sorted(prepped["files"]) == sorted(["blah.txt", "foo/bar.txt", "heanna"])
-    assert len(prepped["links"]["from_path"]) == 0
+    assert len(prepped["links"]) == 0
 
     shutil.rmtree(cache)
     shutil.rmtree(dest)
@@ -63,7 +71,9 @@ def test_prepare_directory_upload_with_some_odd_things():
 
     prepped = prepare_directory_upload(dest, cache_dir=cache)
     assert sorted(prepped["files"]) == sorted(["..check", "arkansas"])
-    assert sorted(prepped["links"]["from_path"]) == sorted(["blah.txt", "foo/bar.txt"])
+    assert sorted(x["from.path"] for x in prepped["links"]) == sorted(
+        ["blah.txt", "foo/bar.txt"]
+    )
 
     shutil.rmtree(cache)
     shutil.rmtree(dest)
@@ -79,7 +89,7 @@ def test_prepare_directory_upload_handles_dangling_links_correctly():
 
     prepped = prepare_directory_upload(dest, cache_dir=cache)
     assert prepped["files"] == []
-    assert len(prepped["links"]["from_path"]) == 2
+    assert len(prepped["links"]) == 2
 
     with pytest.raises(Exception):
         prepare_directory_upload(dest, cache_dir=cache, links="never")

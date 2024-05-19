@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Optional
+from typing import Optional, Union
 
 import requests
 from filelock import FileLock
@@ -25,13 +25,19 @@ def access_token(
     request: bool = True,
     cache_dir: Optional[str] = _cache_directory(),
     token_expiration_limit: int = 10,
-) -> Optional[str]:
+) -> Optional[Union[str, dict]]:
     """Get GitHub access token for authentication to the gypsum API's.
+
+    Example:
+
+        .. code-block:: python
+
+            token = access_token()
 
     Args:
         full:
             Whether to return the full token details.
-            Defaults to False.
+            Defaults to False, only ``token`` is returned.
 
         request:
             Whether to request a new token if no token is found or the
@@ -45,7 +51,10 @@ def access_token(
             Integer specifying the number of seconds until the token expires.
 
     Returns:
-        The GitHub token to access gypsum's resources.
+        If `full=False` A string specifying the GitHub token to
+        access gypsum's resources.
+
+        If `full=True` retuns a dicionary containing the full token details.
     """
     global TOKEN_CACHE
 
@@ -123,7 +132,10 @@ def set_access_token(
             Defaults to None, indicating token is not cached to disk.
 
     Returns:
-        The GitHub token to access gypsum's resources.
+        Dictionary containing the following keys:
+        - ``token``, a string containing the token.
+        - ``name``, the name of the GitHub user authenticated by the token.
+        - ``expires``, the Unix time at which the token expires.
     """
     global TOKEN_CACHE
 

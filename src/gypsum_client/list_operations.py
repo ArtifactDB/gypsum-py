@@ -11,10 +11,15 @@ __license__ = "MIT"
 def list_projects(url: str = _rest_url()) -> list:
     """List all projects in the gypsum backend.
 
+    Example:
+
+        .. code-block:: python
+
+            all_prjs = list_projects()
+
     Args:
         url:
             URL to the gypsum compatible API.
-
 
     Returns:
         List of project names.
@@ -24,6 +29,12 @@ def list_projects(url: str = _rest_url()) -> list:
 
 def list_assets(project: str, url: str = _rest_url()) -> list:
     """List all assets in a project.
+
+    Example:
+
+        .. code-block:: python
+
+            all_assets = list_assets("test-R")
 
     Args:
         project:
@@ -40,6 +51,12 @@ def list_assets(project: str, url: str = _rest_url()) -> list:
 
 def list_versions(project: str, asset: str, url=_rest_url()) -> list:
     """List all versions for a project asset.
+
+    Example:
+
+        .. code-block:: python
+
+            all_vers = list_versions("test-R", "basic")
 
     Args:
         project:
@@ -66,6 +83,12 @@ def list_files(
     url: str = _rest_url(),
 ) -> list:
     """List all files for a specified version of a project and asset.
+
+    Example:
+
+        .. code-block:: python
+
+            all_files = list_files("test-R", "basic", "v1")
 
     Args:
         project:

@@ -19,7 +19,7 @@ See Also:
     :py:func:`~gypsum_client.fetch_metadata_database.fetch_metadata_database`,
     to download and cache the database files.
 
-    See `here <https://github.com/ArtifactDB/bioconductor-metadata-index>`_,
+    See `metadata index <https://github.com/ArtifactDB/bioconductor-metadata-index>`_,
     for details on the SQLite file contents and table structure.
 """
 
@@ -76,7 +76,7 @@ def search_metadata_text(
     Perform a text search on a SQLite database containing
     metadata from the gypsum backend. This is based on a precomputed
     tokenization of all string properties in each metadata document;
-    see `here <https://github.com/ArtifactDB/bioconductor-metadata-index>`_
+    see `metadata index <https://github.com/ArtifactDB/bioconductor-metadata-index>`_
     for details.
 
     Examples:
@@ -102,10 +102,20 @@ def search_metadata_text(
                 latest=False
             )
 
+            # or use the ``&`` operation
+            query = define_text_query("sakugawa") & define_text_query("judgement")
+            result = search_metadata_text(
+                sqlite_path,
+                query,
+                include_metadata=False,
+                latest=False
+            )
+
         - Search for metadata container either of the keywords (`OR` operation):
 
         .. code-block:: python
 
+            # use the ``|`` operation
             query = define_text_query("uiharu") | define_text_query("rank")
             result = search_metadata_text(
                 sqlite_path,

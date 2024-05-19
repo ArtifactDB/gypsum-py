@@ -19,6 +19,27 @@ def fetch_metadata_schema(
 ) -> str:
     """Fetch a JSON schema file for metadata to be inserted into a SQLite database.
 
+    Fetch a JSON schema file for metadata to be inserted into a SQLite database
+    See `metadata index <https://github.com/ArtifactDB/bioconductor-metadata-index>`_
+    for more details.
+
+    Each SQLite database is created from metadata files uploaded to the gypsum backend,
+    so clients uploading objects to be incorporated into the database should
+    validate their metadata against the corresponding JSON schema.
+
+    See Also:
+        :py:func:`~gypsum_client.validate_metadata.validate_metadata`, to
+        validate metadata against a chosen schema.
+
+        :py:func:`~gypsum_client.fetch_metadata_database.fetch_metadata_database`,
+        to obtain the SQLite database of metadata.
+
+    Example:
+
+        .. code-block:: python
+
+            schema_path = fetch_metadata_schema()
+
     Args:
         name:
             Name of the schema.

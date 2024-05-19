@@ -17,6 +17,16 @@ __license__ = "MIT"
 def fetch_latest(project: str, asset: str, url: str = _rest_url()) -> str:
     """Fetch the latest version of a project's asset.
 
+    See Also:
+        :py:func:`~gypsum_client.refresh_operations.refresh_latest`,
+        to refresh the latest version.
+
+    Example:
+
+        .. code-block:: python
+
+            ver = fetch_latest("test-R", "basic")
+
     Args:
         project:
             Project name.
@@ -43,6 +53,12 @@ def fetch_manifest(
     url: str = _rest_url(),
 ) -> dict:
     """Fetch the manifest for a version of an asset of a project.
+
+    Example:
+
+        .. code-block:: python
+
+            manifest = fetch_manifest("test-R", "basic", "v1")
 
     Args:
         project:
@@ -86,8 +102,18 @@ def fetch_manifest(
     )
 
 
-def fetch_permissions(project: str, url: str = _rest_url()) -> list:
+def fetch_permissions(project: str, url: str = _rest_url()) -> dict:
     """Fetch the permissions for a project.
+
+    See Also:
+        :py:func:`~gypsum_client.set_operations.set_permissions`,
+        to update or modify the permissions.
+
+    Example:
+
+        .. code-block:: python
+
+            perms = fetch_permissions("test-R")
 
     Args:
         project:
@@ -102,19 +128,21 @@ def fetch_permissions(project: str, url: str = _rest_url()) -> list:
         organizations that are owners of this project.
         - ``uploaders``, a list of lists specifying the users or organizations
         who are authorzied to upload to this project.
+
         Each entry is a list with the following fields:
-            - ``id``, a string containing the GitHub user or organization
-            that is authorized to upload.
-            - Optional ``asset``, a string containing the name of the asset
-            that the uploader is allowed to upload to. If not provided, there is no
-            restriction on the uploaded asset name.
-            - Optional ``version``, a string containing the name of the version
-            that the uploader is allowed to upload to.If not provided, there is
-            no restriction on the uploaded version name.
-            - Optional ``until``a POSIXct object containing the expiry date of this
-            authorization. If not provided, the authorization does not expire.
-            - Optional ``trusted``, whether the uploader is trusted.
-            If not provided, defaults to False.
+        - ``id``, a string containing the GitHub user or organization
+        that is authorized to upload.
+        - Optional ``asset``, a string containing the name of the asset
+        that the uploader is allowed to upload to. If not provided, there is no
+        restriction on the uploaded asset name.
+        - Optional ``version``, a string containing the name of the version
+        that the uploader is allowed to upload to.If not provided, there is
+        no restriction on the uploaded version name.
+        - Optional ``until``a POSIXct object containing the expiry date of this
+        authorization. If not provided, the authorization does not expire.
+        - Optional ``trusted``, whether the uploader is trusted.
+        If not provided, defaults to False.
+
     """
     perms = _fetch_json(f"{project}/..permissions", url=url)
 
@@ -125,8 +153,18 @@ def fetch_permissions(project: str, url: str = _rest_url()) -> list:
     return perms
 
 
-def fetch_quota(project: str, url: str = _rest_url()):
+def fetch_quota(project: str, url: str = _rest_url()) -> dict:
     """Fetch the quota details for a project.
+
+    See Also:
+        :py:func:`~gypsum_client.set_operations.set_quota`,
+        to update or modify the quota.
+
+    Example:
+
+        .. code-block:: python
+
+            quota = fetch_quota("test-R")
 
     Args:
         project:
@@ -150,8 +188,14 @@ def fetch_summary(
     cache_dir: str = _cache_directory(),
     overwrite: bool = False,
     url: str = _rest_url(),
-):
+) -> dict:
     """Fetch the summary for a version of an asset of a project.
+
+    Example:
+
+        .. code-block:: python
+
+            summa = fetch_summary("test-R", "basic", "v1")
 
     Args:
         project:
@@ -203,8 +247,18 @@ def fetch_summary(
     return _out
 
 
-def fetch_usage(project: str, url: str = _rest_url()):
+def fetch_usage(project: str, url: str = _rest_url()) -> int:
     """Fetch the quota usage for a project.
+
+    See Also:
+        :py:func:`~gypsum_client.refresh_operations.refresh_usage`,
+        to refresh usage details.
+
+    Example:
+
+        .. code-block:: python
+
+            usage = fetch_usage("test-R")
 
     Args:
         project:
@@ -214,7 +268,7 @@ def fetch_usage(project: str, url: str = _rest_url()):
             URL to the gypsum compatible API.
 
     Returns:
-        Numeric scalar specifying the quota usage for the project, in bytes.
+        Quota usage for the project, in bytes.
     """
     _usage = _fetch_json(f"{project}/..usage", url=url)
     return _usage["total"]
