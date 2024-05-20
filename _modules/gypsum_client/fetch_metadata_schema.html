@@ -1,15 +1,14 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Interacting with the gypsum REST API" href="tutorial.html" /><link rel="prev" title="gypsum-client" href="index.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>Python client to the gypsum REST API - gypsum-client 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+        <title>gypsum_client.fetch_metadata_schema - gypsum-client 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
     
     
 
@@ -179,7 +178,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">gypsum-client 0.1.0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">gypsum-client 0.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -191,7 +190,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -200,26 +199,26 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
   <span class="sidebar-brand-text">gypsum-client 0.1.0 documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributions &amp; Help</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/gypsum_client.html">gypsum_client package</a></li>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributions &amp; Help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gypsum_client.html">gypsum_client package</a></li>
 </ul>
 </li>
 </ul>
@@ -241,13 +240,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="view-this-page">
-  <a class="muted-link" href="_sources/readme.md.txt" title="View this page">
-    <svg><use href="#svg-eye"></use></svg>
-    <span class="visually-hidden">View this page</span>
-  </a>
-</div>
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
@@ -256,72 +249,103 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <!-- These are examples of badges you might want to add to your README:
-     please update the URLs accordingly
+          <h1>Source code for gypsum_client.fetch_metadata_schema</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
 
-[![Built Status](https://api.cirrus-ci.com/github/<USER>/gypsum-client.svg?branch=main)](https://cirrus-ci.com/github/<USER>/gypsum-client)
-[![ReadTheDocs](https://readthedocs.org/projects/gypsum-client/badge/?version=latest)](https://gypsum-client.readthedocs.io/en/stable/)
-[![Coveralls](https://img.shields.io/coveralls/github/<USER>/gypsum-client/main.svg)](https://coveralls.io/r/<USER>/gypsum-client)
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">filelock</span> <span class="kn">import</span> <span class="n">FileLock</span>
 
-[![Conda-Forge](https://img.shields.io/conda/vn/conda-forge/gypsum-client.svg)](https://anaconda.org/conda-forge/gypsum-client)
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">_cache_directory</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">REQUESTS_MOD</span>
 
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/gypsum-client)
--->
-<p><a class="reference external" href="https://pyscaffold.org/"><img alt="Project generated with PyScaffold" src="https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold" /></a>
-<a class="reference external" href="https://pypi.org/project/gypsum-client/"><img alt="PyPI-Server" src="https://img.shields.io/pypi/v/gypsum-client.svg" /></a></p>
-<section class="tex2jax_ignore mathjax_ignore" id="python-client-to-the-gypsum-rest-api">
-<h1>Python client to the gypsum REST API<a class="headerlink" href="#python-client-to-the-gypsum-rest-api" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">gypsum_client</span></code> package provides the Python client to any instance of the <a class="reference external" href="https://gypsum.artifactdb.com">gypsum REST API</a>. This allows client (both in <strong>R</strong> and <strong>Python</strong>) packages to easily store and retrieve resources from the <strong>gypsum</strong> backend.
-It also provides mechanisms to allow package maintainers to easily manage upload authorizations and third-party contributions.</p>
-<p>Readers are referred to <a class="reference external" href="https://github.com/ArtifactDB/gypsum-worker">API’s documentation</a> for a description of the concepts; this guide will strictly focus on the usage of the <code class="docutils literal notranslate"><span class="pre">gypsum_client</span></code> package.</p>
-<p><strong>Note: check out the R/Bioconductor package for the gypsum REST API <a class="reference external" href="https://github.com/ArtifactDB/gypsum-R">here</a>.</strong></p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>Package is published to <a class="reference external" href="https://pypi.org/project/gypsum-client/">PyPI</a>,</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>gypsum_client
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Jayaram Kancherla&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Jayaram Kancherla&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
+
+
+<div class="viewcode-block" id="fetch_metadata_schema">
+<a class="viewcode-back" href="../../api/gypsum_client.html#gypsum_client.fetch_metadata_schema.fetch_metadata_schema">[docs]</a>
+<span class="k">def</span> <span class="nf">fetch_metadata_schema</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bioconductor/v1.json&quot;</span><span class="p">,</span>
+    <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch a JSON schema file for metadata to be inserted into a SQLite database.</span>
+
+<span class="sd">    Fetch a JSON schema file for metadata to be inserted into a SQLite database</span>
+<span class="sd">    See `metadata index &lt;https://github.com/ArtifactDB/bioconductor-metadata-index&gt;`_</span>
+<span class="sd">    for more details.</span>
+
+<span class="sd">    Each SQLite database is created from metadata files uploaded to the gypsum backend,</span>
+<span class="sd">    so clients uploading objects to be incorporated into the database should</span>
+<span class="sd">    validate their metadata against the corresponding JSON schema.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :py:func:`~gypsum_client.validate_metadata.validate_metadata`, to</span>
+<span class="sd">        validate metadata against a chosen schema.</span>
+
+<span class="sd">        :py:func:`~gypsum_client.fetch_metadata_database.fetch_metadata_database`,</span>
+<span class="sd">        to obtain the SQLite database of metadata.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            schema_path = fetch_metadata_schema()</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name:</span>
+<span class="sd">            Name of the schema.</span>
+<span class="sd">            Defaults to &quot;bioconductor/v1.json&quot;.</span>
+
+<span class="sd">        cache_dir:</span>
+<span class="sd">            Path to the cache directory.</span>
+
+<span class="sd">        overwrite:</span>
+<span class="sd">            Whether to overwrite existing file in cache.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path containing the downloaded schema.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cache_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">cache_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cache_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mktemp</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_cache_directory</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">),</span> <span class="s2">&quot;schemas&quot;</span><span class="p">)</span>
+
+        <span class="n">cache_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cache_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cache_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cache_path</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+            <span class="n">_lock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">cache_path</span> <span class="o">+</span> <span class="s2">&quot;.LOCK&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_lock</span><span class="o">.</span><span class="n">is_locked</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">cache_path</span>
+
+    <span class="n">_lock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">cache_path</span> <span class="o">+</span> <span class="s2">&quot;.LOCK&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">_lock</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://artifactdb.github.io/bioconductor-metadata-index/&quot;</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">REQUESTS_MOD</span><span class="p">[</span><span class="s2">&quot;verify&quot;</span><span class="p">])</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cache_path</span></div>
+
 </pre></div>
-</div>
-<p>Check out the <a class="reference external" href="https://artifactdb.github.io/gypsum-py/">documentation</a> for more information.</p>
-<!-- pyscaffold-notes -->
-</section>
-<section id="note">
-<h2>Note<a class="headerlink" href="#note" title="Link to this heading">¶</a></h2>
-<p>This project has been set up using PyScaffold 4.5. For details and usage
-information on PyScaffold see <a class="reference external" href="https://pyscaffold.org/">https://pyscaffold.org/</a>.</p>
-</section>
-</section>
-
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="tutorial.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Interacting with the gypsum REST API</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Home</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -340,35 +364,15 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Python client to the gypsum REST API</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#note">Note</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=4e2eecee"></script>
+</div><script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
     </body>
 </html>

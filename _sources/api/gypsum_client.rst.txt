@@ -4,10 +4,162 @@ gypsum\_client package
 Submodules
 ----------
 
-gypsum\_client.skeleton module
-------------------------------
+gypsum\_client.auth module
+--------------------------
 
-.. automodule:: gypsum_client.skeleton
+.. automodule:: gypsum_client.auth
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.clone\_operations module
+---------------------------------------
+
+.. automodule:: gypsum_client.clone_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.config module
+----------------------------
+
+.. automodule:: gypsum_client.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.create\_operations module
+----------------------------------------
+
+.. automodule:: gypsum_client.create_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.fetch\_metadata\_database module
+-----------------------------------------------
+
+.. automodule:: gypsum_client.fetch_metadata_database
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.fetch\_metadata\_schema module
+---------------------------------------------
+
+.. automodule:: gypsum_client.fetch_metadata_schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.fetch\_operations module
+---------------------------------------
+
+.. automodule:: gypsum_client.fetch_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.list\_operations module
+--------------------------------------
+
+.. automodule:: gypsum_client.list_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.prepare\_directory\_for\_upload module
+-----------------------------------------------------
+
+.. automodule:: gypsum_client.prepare_directory_for_upload
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.probation\_operations module
+-------------------------------------------
+
+.. automodule:: gypsum_client.probation_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.refresh\_operations module
+-----------------------------------------
+
+.. automodule:: gypsum_client.refresh_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.remove\_operations module
+----------------------------------------
+
+.. automodule:: gypsum_client.remove_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.resolve\_links module
+------------------------------------
+
+.. automodule:: gypsum_client.resolve_links
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.s3\_config module
+--------------------------------
+
+.. automodule:: gypsum_client.s3_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.save\_operations module
+--------------------------------------
+
+.. automodule:: gypsum_client.save_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.search\_metadata module
+--------------------------------------
+
+.. automodule:: gypsum_client.search_metadata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.set\_operations module
+-------------------------------------
+
+.. automodule:: gypsum_client.set_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.upload\_api\_operations module
+---------------------------------------------
+
+.. automodule:: gypsum_client.upload_api_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.upload\_file\_actions module
+-------------------------------------------
+
+.. automodule:: gypsum_client.upload_file_actions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.validate\_metadata module
+----------------------------------------
+
+.. automodule:: gypsum_client.validate_metadata
    :members:
    :undoc-members:
    :show-inheritance:
