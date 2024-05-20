@@ -31,6 +31,8 @@ Package is published to [PyPI](https://pypi.org/project/gypsum-client/),
 pip install gypsum_client
 ```
 
+Check out the [documentation](https://artifactdb.github.io/gypsum-py/) for more information.
+
 <!-- pyscaffold-notes -->
 
 ## Note
