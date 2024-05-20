@@ -1,14 +1,15 @@
 import requests
 
-from ._utils import _list_for_prefix, _rest_url
+from ._utils import _list_for_prefix
 from .config import REQUESTS_MOD
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
 
-def list_projects(url: str = _rest_url()) -> list:
+def list_projects(url: str = rest_url()) -> list:
     """List all projects in the gypsum backend.
 
     Example:
@@ -27,7 +28,7 @@ def list_projects(url: str = _rest_url()) -> list:
     return _list_for_prefix(prefix=None, url=url)
 
 
-def list_assets(project: str, url: str = _rest_url()) -> list:
+def list_assets(project: str, url: str = rest_url()) -> list:
     """List all assets in a project.
 
     Example:
@@ -49,7 +50,7 @@ def list_assets(project: str, url: str = _rest_url()) -> list:
     return _list_for_prefix(f"{project}/", url=url)
 
 
-def list_versions(project: str, asset: str, url=_rest_url()) -> list:
+def list_versions(project: str, asset: str, url: str = rest_url()) -> list:
     """List all versions for a project asset.
 
     Example:
@@ -80,7 +81,7 @@ def list_files(
     version: str,
     prefix: str = None,
     include_dot: bool = True,
-    url: str = _rest_url(),
+    url: str = rest_url(),
 ) -> list:
     """List all files for a specified version of a project and asset.
 

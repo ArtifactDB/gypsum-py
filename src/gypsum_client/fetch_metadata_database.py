@@ -14,7 +14,8 @@ import warnings
 import requests
 from filelock import FileLock
 
-from ._utils import _cache_directory, _download_and_rename_file
+from ._utils import _download_and_rename_file
+from .cache_directory import cache_directory
 from .config import REQUESTS_MOD
 
 __author__ = "Jayaram Kancherla"
@@ -71,7 +72,7 @@ def fetch_metadata_database(
     if cache_dir is None:
         cache_path = tempfile.NamedTemporaryFile(suffix=".sqlite3").name
     else:
-        cache_dir = os.path.join(_cache_directory(cache_dir), "databases")
+        cache_dir = os.path.join(cache_directory(cache_dir), "databases")
 
         cache_path = os.path.join(cache_dir, name)
         if not os.path.exists(cache_path):

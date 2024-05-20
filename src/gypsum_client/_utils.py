@@ -3,8 +3,7 @@ import os
 import re
 import shutil
 import tempfile
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import datetime
 from typing import Optional
 from urllib.parse import quote_plus
 
@@ -16,40 +15,6 @@ from .config import REQUESTS_MOD
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
-
-
-def _rest_url(url: Optional[str] = None):
-    current = "https://gypsum.artifactdb.com"
-
-    if url is None:
-        return current
-    else:
-        return url
-
-
-def _cache_directory(dir: Optional[str] = None):
-    current = None
-    if current is None:
-        _from_env = os.environ.get("GYPSUM_CACHE_DIR", None)
-        if _from_env is not None:
-            if not os.path.exists(_from_env):
-                raise FileNotFoundError(
-                    f"Path {_from_env} does not exist or is not accessible."
-                )
-
-            current = _from_env
-        else:
-            current = os.path.join(str(Path.home()), "gypsum", "cache")
-
-            os.makedirs(current, exist_ok=True)
-
-    if dir is None:
-        return current
-    else:
-        if not os.path.exists(dir):
-            raise FileNotFoundError(f"Path {dir} does not exist or is not accessible.")
-
-        return dir
 
 
 def _remove_slash_url(url: str):

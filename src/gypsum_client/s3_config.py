@@ -6,8 +6,9 @@ from typing import Optional
 import requests
 from filelock import FileLock
 
-from ._utils import _cache_directory, _rest_url
+from .cache_directory import cache_directory
 from .config import REQUESTS_MOD
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -22,7 +23,7 @@ def _config_cache_path(cache_dir):
 
 
 def public_s3_config(
-    refresh: bool = False, url: str = _rest_url(), cache_dir: Optional[str] = None
+    refresh: bool = False, url: str = rest_url(), cache_dir: Optional[str] = None
 ) -> dict:
     """Get S3 configuration to the bucket storing the data.
 
@@ -44,7 +45,6 @@ def public_s3_config(
         A dictionary containing the S3 credentials.
     """
     creds = None
-    cache_dir = _cache_directory(cache_dir)
 
     if not refresh:
         if cache_dir is None:

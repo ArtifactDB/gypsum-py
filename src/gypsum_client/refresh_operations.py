@@ -4,9 +4,9 @@ import requests
 
 from ._utils import (
     _remove_slash_url,
-    _rest_url,
 )
 from .auth import access_token
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -14,7 +14,7 @@ __license__ = "MIT"
 
 
 def refresh_latest(
-    project: str, asset: str, url: str = _rest_url(), token: str = None
+    project: str, asset: str, url: str = rest_url(), token: str = None
 ) -> str:
     """Refresh the latest version.
 
@@ -69,7 +69,7 @@ def refresh_latest(
     return req.json()["version"]
 
 
-def refresh_usage(project: str, url: str = _rest_url(), token: str = None) -> int:
+def refresh_usage(project: str, url: str = rest_url(), token: str = None) -> int:
     """Refresh the usage quota of a project.
 
     Recompute the usage of a project.

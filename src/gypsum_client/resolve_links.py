@@ -6,11 +6,11 @@ from typing import Optional
 from ._utils import (
     BUCKET_CACHE_NAME,
     _acquire_lock,
-    _cache_directory,
     _release_lock,
-    _rest_url,
 )
+from .cache_directory import cache_directory
 from .fetch_operations import fetch_manifest
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -23,7 +23,7 @@ def resolve_links(
     version: str,
     cache_dir: Optional[str] = None,
     overwrite: str = False,
-    url: str = _rest_url(),
+    url: str = rest_url(),
 ):
     """Resolve links in the cache directory.
 
@@ -66,7 +66,6 @@ def resolve_links(
     """
     from .save_operations import save_file
 
-    cache_dir = _cache_directory(cache_dir)
     _acquire_lock(cache_dir, project, asset, version)
 
     def release_lock_wrapper():
