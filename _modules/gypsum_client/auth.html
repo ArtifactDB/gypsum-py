@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>gypsum_client.auth - gypsum-client 0.1.0 documentation</title>
+        <title>gypsum_client.auth - gypsum-client 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -178,7 +178,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">gypsum-client 0.1.0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">gypsum-client 0.1.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -202,7 +202,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">gypsum-client 0.1.0 documentation</span>
+  <span class="sidebar-brand-text">gypsum-client 0.1.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -264,8 +264,10 @@
 <span class="kn">from</span> <span class="nn">filelock</span> <span class="kn">import</span> <span class="n">FileLock</span>
 
 <span class="kn">from</span> <span class="nn">._github</span> <span class="kn">import</span> <span class="n">github_access_token</span>
-<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">_cache_directory</span><span class="p">,</span> <span class="n">_is_interactive</span><span class="p">,</span> <span class="n">_remove_slash_url</span><span class="p">,</span> <span class="n">_rest_url</span>
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">_is_interactive</span><span class="p">,</span> <span class="n">_remove_slash_url</span>
+<span class="kn">from</span> <span class="nn">.cache_directory</span> <span class="kn">import</span> <span class="n">cache_directory</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">REQUESTS_MOD</span>
+<span class="kn">from</span> <span class="nn">.rest_url</span> <span class="kn">import</span> <span class="n">rest_url</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Jayaram Kancherla&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Jayaram Kancherla&quot;</span>
@@ -283,7 +285,7 @@
 <span class="k">def</span> <span class="nf">access_token</span><span class="p">(</span>
     <span class="n">full</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">request</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cache_directory</span><span class="p">(),</span>
+    <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache_directory</span><span class="p">(),</span>
     <span class="n">token_expiration_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get GitHub access token for authentication to the gypsum API&#39;s.</span>
@@ -329,7 +331,6 @@
             <span class="n">TOKEN_CACHE</span><span class="p">[</span><span class="s2">&quot;auth_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">cache_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">_cache_directory</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
         <span class="n">cache_path</span> <span class="o">=</span> <span class="n">_token_cache_path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cache_path</span><span class="p">):</span>
@@ -362,12 +363,12 @@
 <a class="viewcode-back" href="../../api/gypsum_client.html#gypsum_client.auth.set_access_token">[docs]</a>
 <span class="k">def</span> <span class="nf">set_access_token</span><span class="p">(</span>
     <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TOKEN_AUTO</span><span class="p">,</span>
-    <span class="n">app_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_rest_url</span><span class="p">(),</span>
+    <span class="n">app_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rest_url</span><span class="p">(),</span>
     <span class="n">app_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">app_secret</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">github_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://api.github.com&quot;</span><span class="p">,</span>
     <span class="n">user_agent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cache_directory</span><span class="p">(),</span>
+    <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache_directory</span><span class="p">(),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set GitHub access token for authentication to the gypsum API&#39;s.</span>
 
@@ -404,7 +405,6 @@
 
     <span class="n">cache_path</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">cache_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">_cache_directory</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
         <span class="n">cache_path</span> <span class="o">=</span> <span class="n">_token_cache_path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -474,7 +474,6 @@
     <span class="k">if</span> <span class="n">expires_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">expiry</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">expires_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">_cache_directory</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cache_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cache_path</span> <span class="o">=</span> <span class="n">_token_cache_path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cache_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -524,7 +523,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../../_static/documentation_options.js?v=a58bc63e"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>

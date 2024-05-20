@@ -12,6 +12,14 @@ gypsum\_client.auth module
    :undoc-members:
    :show-inheritance:
 
+gypsum\_client.cache\_directory module
+--------------------------------------
+
+.. automodule:: gypsum_client.cache_directory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gypsum\_client.clone\_operations module
 ---------------------------------------
 
@@ -104,6 +112,14 @@ gypsum\_client.resolve\_links module
 ------------------------------------
 
 .. automodule:: gypsum_client.resolve_links
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gypsum\_client.rest\_url module
+-------------------------------
+
+.. automodule:: gypsum_client.rest_url
    :members:
    :undoc-members:
    :show-inheritance:
