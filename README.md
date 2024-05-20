@@ -16,11 +16,12 @@
 # Python client to the gypsum REST API
 
 
-Provides Python client for the [**gypsum** REST API](https://github.com/ArtifactDB/gypsum-worker).
+The `gypsum_client` package provides the Python client to any instance of the [gypsum REST API](https://gypsum.artifactdb.com). This allows client (both in **R** and **Python**) packages to easily store and retrieve resources from the **gypsum** backend.
+It also provides mechanisms to allow package maintainers to easily manage upload authorizations and third-party contributions.
 
-Readers are referred to the [API's documentation](https://gypsum-test.aaron-lun.workers.dev) or the [user guide](https://bioconductor.org/packages/devel/bioc/vignettes/gypsum/inst/doc/userguide.html) from its R equivalent for more details.
+Readers are referred to [API's documentation](https://github.com/ArtifactDB/gypsum-worker) for a description of the concepts; this guide will strictly focus on the usage of the `gypsum_client` package.
 
-***Note: check out the R/Bioconductor package for the gypsum client [here](https://github.com/ArtifactDB/gypsum-R).***
+**Note: check out the R/Bioconductor package for the gypsum REST API [here](https://github.com/ArtifactDB/gypsum-R).**
 
 ## Installation
 
@@ -29,6 +30,8 @@ Package is published to [PyPI](https://pypi.org/project/gypsum-client/),
 ```sh
 pip install gypsum_client
 ```
+
+Check out the [documentation](https://artifactdb.github.io/gypsum-py/) for more information.
 
 <!-- pyscaffold-notes -->
 
