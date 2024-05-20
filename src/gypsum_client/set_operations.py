@@ -2,9 +2,10 @@ from urllib.parse import quote_plus
 
 import requests
 
-from ._utils import _remove_slash_url, _rest_url, _sanitize_uploaders
+from ._utils import _remove_slash_url, _sanitize_uploaders
 from .auth import access_token
 from .fetch_operations import fetch_permissions
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -16,7 +17,7 @@ def set_quota(
     baseline: int = None,
     growth_rate: int = None,
     year: int = None,
-    url: str = _rest_url(),
+    url: str = rest_url(),
     token: str = None,
 ):
     """
@@ -96,7 +97,7 @@ def set_permissions(
     owners: str = None,
     uploaders: str = None,
     append: bool = True,
-    url: str = _rest_url(),
+    url: str = rest_url(),
     token: str = None,
 ):
     """

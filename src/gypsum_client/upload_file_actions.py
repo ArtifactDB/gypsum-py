@@ -3,10 +3,12 @@ from multiprocessing import Pool
 
 import requests
 
-from ._utils import _cache_directory, _remove_slash_url, _rest_url
+from ._utils import _remove_slash_url
 from .auth import access_token
+from .cache_directory import cache_directory
 from .config import REQUESTS_MOD
 from .prepare_directory_for_upload import prepare_directory_upload
+from .rest_url import rest_url
 from .upload_api_operations import abort_upload, complete_upload, start_upload
 
 __author__ = "Jayaram Kancherla"
@@ -19,10 +21,10 @@ def upload_directory(
     project: str,
     asset: str,
     version: str,
-    cache_dir: str = _cache_directory(),
+    cache_dir: str = cache_directory(),
     deduplicate: bool = True,
     probation: bool = False,
-    url: str = _rest_url(),
+    url: str = rest_url(),
     token: str = None,
     concurrent: int = 1,
     abort_failed: bool = True,
@@ -106,7 +108,6 @@ def upload_directory(
     Returns:
         `True` if successfull, otherwise `False`.
     """
-    cache_dir = _cache_directory(cache_dir)
 
     if token is None:
         token = access_token()
@@ -143,7 +144,7 @@ def _upload_file_wrapper(args):
 
 
 def upload_files(
-    init: dict, directory: str = None, url: str = _rest_url(), concurrent: int = 1
+    init: dict, directory: str = None, url: str = rest_url(), concurrent: int = 1
 ):
     """Upload files in an initialized upload session for a version of an asset.
 

@@ -2,15 +2,16 @@ from urllib.parse import quote_plus
 
 import requests
 
-from ._utils import _remove_slash_url, _rest_url
+from ._utils import _remove_slash_url
 from .auth import access_token
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
 
-def remove_asset(project: str, asset: str, url: str = _rest_url(), token: str = None):
+def remove_asset(project: str, asset: str, url: str = rest_url(), token: str = None):
     """Remove an asset of a project from the gypsum backend.
 
     See Also:
@@ -62,7 +63,7 @@ def remove_asset(project: str, asset: str, url: str = _rest_url(), token: str = 
     return True
 
 
-def remove_project(project: str, url: str = _rest_url(), token: str = None):
+def remove_project(project: str, url: str = rest_url(), token: str = None):
     """Remove a project from the gypsum backend.
 
     See Also:
@@ -109,11 +110,11 @@ def remove_version(
     project: str,
     asset: str,
     version: str,
-    url: str = _rest_url(),
+    url: str = rest_url(),
     token: str = None,
 ):
     """Remove a project from the gypsum backend.
-    
+
     See Also:
         :py:func:`~.remove_asset`,
         to remove a specific asset.

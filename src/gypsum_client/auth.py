@@ -6,8 +6,10 @@ import requests
 from filelock import FileLock
 
 from ._github import github_access_token
-from ._utils import _cache_directory, _is_interactive, _remove_slash_url, _rest_url
+from ._utils import _is_interactive, _remove_slash_url
+from .cache_directory import cache_directory
 from .config import REQUESTS_MOD
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -23,7 +25,7 @@ def _token_cache_path(cache_dir):
 def access_token(
     full: bool = False,
     request: bool = True,
-    cache_dir: Optional[str] = _cache_directory(),
+    cache_dir: Optional[str] = cache_directory(),
     token_expiration_limit: int = 10,
 ) -> Optional[Union[str, dict]]:
     """Get GitHub access token for authentication to the gypsum API's.
@@ -69,7 +71,6 @@ def access_token(
             TOKEN_CACHE["auth_info"] = None
 
     if cache_dir is not None:
-        cache_dir = _cache_directory(cache_dir)
         cache_path = _token_cache_path(cache_dir)
 
         if os.path.exists(cache_path):
@@ -99,12 +100,12 @@ TOKEN_AUTO = "auto"
 
 def set_access_token(
     token: str = TOKEN_AUTO,
-    app_url: str = _rest_url(),
+    app_url: str = rest_url(),
     app_key: Optional[str] = None,
     app_secret: Optional[str] = None,
     github_url: str = "https://api.github.com",
     user_agent: Optional[str] = None,
-    cache_dir: Optional[str] = _cache_directory(),
+    cache_dir: Optional[str] = cache_directory(),
 ) -> dict:
     """Set GitHub access token for authentication to the gypsum API's.
 
@@ -141,7 +142,6 @@ def set_access_token(
 
     cache_path = None
     if cache_dir is not None:
-        cache_dir = _cache_directory(cache_dir)
         cache_path = _token_cache_path(cache_dir)
 
     if token is None:
@@ -211,7 +211,6 @@ def set_access_token(
     if expires_header is not None:
         expiry = float(expires_header.split(" ")[0])
 
-    cache_dir = _cache_directory(cache_dir)
     if cache_dir is not None:
         cache_path = _token_cache_path(cache_dir)
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)

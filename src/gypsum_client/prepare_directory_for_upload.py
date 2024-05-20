@@ -59,9 +59,9 @@ from typing import Literal
 
 from ._utils import (
     BUCKET_CACHE_NAME,
-    _cache_directory,
     _sanitize_path,
 )
+from .cache_directory import cache_directory
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -71,7 +71,7 @@ __license__ = "MIT"
 def prepare_directory_upload(
     directory: str,
     links: Literal["auto", "always", "never"] = "auto",
-    cache_dir: str = _cache_directory(),
+    cache_dir: str = cache_directory(),
 ) -> dict:
     """Prepare to upload a directory's contents.
 
@@ -110,8 +110,6 @@ def prepare_directory_upload(
         raise ValueError(
             f"Invalid value for 'links': {links}. Must be one of {_links_options}."
         )
-
-    cache_dir = _cache_directory(cache_dir)
 
     out_files = []
     out_links = []

@@ -2,19 +2,19 @@ import os
 
 from ._utils import (
     BUCKET_CACHE_NAME,
-    _cache_directory,
     _cast_datetime,
     _fetch_cacheable_json,
     _fetch_json,
-    _rest_url,
 )
+from .cache_directory import cache_directory
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
 __license__ = "MIT"
 
 
-def fetch_latest(project: str, asset: str, url: str = _rest_url()) -> str:
+def fetch_latest(project: str, asset: str, url: str = rest_url()) -> str:
     """Fetch the latest version of a project's asset.
 
     See Also:
@@ -48,9 +48,9 @@ def fetch_manifest(
     project: str,
     asset: str,
     version: str,
-    cache_dir: str = _cache_directory(),
+    cache_dir: str = cache_directory(),
     overwrite: bool = False,
-    url: str = _rest_url(),
+    url: str = rest_url(),
 ) -> dict:
     """Fetch the manifest for a version of an asset of a project.
 
@@ -102,7 +102,7 @@ def fetch_manifest(
     )
 
 
-def fetch_permissions(project: str, url: str = _rest_url()) -> dict:
+def fetch_permissions(project: str, url: str = rest_url()) -> dict:
     """Fetch the permissions for a project.
 
     See Also:
@@ -153,7 +153,7 @@ def fetch_permissions(project: str, url: str = _rest_url()) -> dict:
     return perms
 
 
-def fetch_quota(project: str, url: str = _rest_url()) -> dict:
+def fetch_quota(project: str, url: str = rest_url()) -> dict:
     """Fetch the quota details for a project.
 
     See Also:
@@ -185,9 +185,9 @@ def fetch_summary(
     project: str,
     asset: str,
     version: str,
-    cache_dir: str = _cache_directory(),
+    cache_dir: str = cache_directory(),
     overwrite: bool = False,
-    url: str = _rest_url(),
+    url: str = rest_url(),
 ) -> dict:
     """Fetch the summary for a version of an asset of a project.
 
@@ -247,7 +247,7 @@ def fetch_summary(
     return _out
 
 
-def fetch_usage(project: str, url: str = _rest_url()) -> int:
+def fetch_usage(project: str, url: str = rest_url()) -> int:
     """Fetch the quota usage for a project.
 
     See Also:

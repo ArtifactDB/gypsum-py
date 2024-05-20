@@ -5,9 +5,10 @@ from urllib.parse import quote_plus
 
 import requests
 
-from ._utils import _remove_slash_url, _rest_url, _sanitize_path
+from ._utils import _remove_slash_url, _sanitize_path
 from .auth import access_token
 from .config import REQUESTS_MOD
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -22,7 +23,7 @@ def start_upload(
     links: List[dict] = None,
     deduplicate: bool = True,
     probation: bool = False,
-    url: str = _rest_url(),
+    url: str = rest_url(),
     token: str = None,
     directory: str = None,
 ) -> dict:
@@ -240,7 +241,7 @@ def start_upload(
     return resp
 
 
-def complete_upload(init: dict, url=_rest_url()):
+def complete_upload(init: dict, url=rest_url()):
     """Complete an upload session after all files have been uploaded.
 
     See Also:
@@ -300,7 +301,7 @@ def complete_upload(init: dict, url=_rest_url()):
         ) from e
 
 
-def abort_upload(init: dict, url=_rest_url()):
+def abort_upload(init: dict, url=rest_url()):
     """Abort an upload session, usually after an irrecoverable error.
 
     See Also:

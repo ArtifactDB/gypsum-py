@@ -17,6 +17,7 @@ finally:
 
 
 from .auth import access_token, set_access_token
+from .cache_directory import cache_directory
 from .clone_operations import clone_version
 from .config import REQUESTS_MOD
 from .create_operations import create_project
@@ -36,6 +37,7 @@ from .probation_operations import approve_probation, reject_probation
 from .refresh_operations import refresh_latest, refresh_usage
 from .remove_operations import remove_asset, remove_project, remove_version
 from .resolve_links import resolve_links
+from .rest_url import rest_url
 from .s3_config import public_s3_config
 from .save_operations import save_file, save_version
 from .search_metadata import define_text_query, search_metadata_text

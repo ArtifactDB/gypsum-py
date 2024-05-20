@@ -4,9 +4,9 @@ import requests
 
 from ._utils import (
     _remove_slash_url,
-    _rest_url,
 )
 from .auth import access_token
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -14,7 +14,7 @@ __license__ = "MIT"
 
 
 def approve_probation(
-    project: str, asset: str, version: str, url: str = _rest_url(), token: str = None
+    project: str, asset: str, version: str, url: str = rest_url(), token: str = None
 ):
     """Approve a probational upload.
 
@@ -81,7 +81,7 @@ def approve_probation(
 
 
 def reject_probation(
-    project: str, asset: str, version: str, url: str = _rest_url(), token: str = None
+    project: str, asset: str, version: str, url: str = rest_url(), token: str = None
 ):
     """Reject a probational upload.
 

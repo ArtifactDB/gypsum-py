@@ -42,8 +42,10 @@ import errno
 import os
 import shutil
 
-from ._utils import BUCKET_CACHE_NAME, _cache_directory, _rest_url
+from ._utils import BUCKET_CACHE_NAME
+from .cache_directory import cache_directory
 from .fetch_operations import fetch_manifest
+from .rest_url import rest_url
 from .save_operations import save_version
 
 __author__ = "Jayaram Kancherla"
@@ -57,8 +59,8 @@ def clone_version(
     version: str,
     destination: str,
     download: bool = True,
-    cache_dir: str = _cache_directory(),
-    url: str = _rest_url(),
+    cache_dir: str = cache_directory(),
+    url: str = rest_url(),
     **kwargs,
 ):
     """Clone a version's directory structure.
@@ -112,8 +114,6 @@ def clone_version(
 
             Only used if ``download`` is `True`.
     """
-    cache_dir = _cache_directory(cache_dir)
-
     if download:
         save_version(project, asset, version, cache_dir=cache_dir, url=url, **kwargs)
 

@@ -9,15 +9,15 @@ from typing import Optional
 from ._utils import (
     BUCKET_CACHE_NAME,
     _acquire_lock,
-    _cache_directory,
     _release_lock,
-    _rest_url,
     _sanitize_path,
     _save_file,
 )
+from .cache_directory import cache_directory
 from .config import REQUESTS_MOD
 from .list_operations import list_files
 from .resolve_links import resolve_links
+from .rest_url import rest_url
 
 __author__ = "Jayaram Kancherla"
 __copyright__ = "Jayaram Kancherla"
@@ -39,7 +39,7 @@ def save_version(
     overwrite: bool = False,
     relink: bool = True,
     concurrent: int = 1,
-    url: str = _rest_url(),
+    url: str = rest_url(),
 ) -> str:
     """Download all files associated with a version of an asset
     of a project from the gypsum bucket.
@@ -82,7 +82,6 @@ def save_version(
         Path to the local directory where the files are downloaded to.
     """
 
-    cache_dir = _cache_directory(cache_dir)
     _acquire_lock(cache_dir, project, asset, version)
 
     def release_lock_wrapper():
@@ -206,7 +205,7 @@ def save_file(
     path: str,
     cache_dir: Optional[str] = None,
     overwrite: bool = False,
-    url: str = _rest_url(),
+    url: str = rest_url(),
 ):
     """Save a file from a version of a project asset.
 
@@ -256,7 +255,6 @@ def save_file(
         The destintion file path where the file is downloaded to in the local
         file system.
     """
-    cache_dir = _cache_directory(cache_dir)
 
     _acquire_lock(cache_dir, project, asset, version)
 
