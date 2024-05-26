@@ -21,7 +21,7 @@ def resolve_links(
     project: str,
     asset: str,
     version: str,
-    cache_dir: Optional[str] = None,
+    cache_dir: Optional[str] = cache_directory(),
     overwrite: str = False,
     url: str = rest_url(),
 ):

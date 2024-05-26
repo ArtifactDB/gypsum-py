@@ -26,7 +26,9 @@ LAST_CHECK = {"req_time": None, "mod_time": None}
 
 
 def fetch_metadata_database(
-    name: str = "bioconductor.sqlite3", cache_dir: str = None, overwrite: bool = False
+    name: str = "bioconductor.sqlite3",
+    cache_dir: str = cache_directory(),
+    overwrite: bool = False,
 ) -> str:
     """Fetch the SQLite database containing metadata from the gypsum backend.
 
@@ -72,7 +74,7 @@ def fetch_metadata_database(
     if cache_dir is None:
         cache_path = tempfile.NamedTemporaryFile(suffix=".sqlite3").name
     else:
-        cache_dir = os.path.join(cache_directory(cache_dir), "databases")
+        cache_dir = os.path.join(cache_dir, "databases")
 
         cache_path = os.path.join(cache_dir, name)
         if not os.path.exists(cache_path):

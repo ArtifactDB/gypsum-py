@@ -121,14 +121,12 @@ def prepare_directory_upload(
     for root, _, files in os.walk(directory):
         for name in files:
             rel_path = os.path.relpath(os.path.join(root, name), directory)
-            dest = (
-                os.readlink(os.path.join(directory, rel_path))
-                if os.path.islink(os.path.join(directory, rel_path))
-                else None
-            )
-            if not dest:
+
+            if not os.path.islink(os.path.join(directory, rel_path)):
                 out_files.append(rel_path)
                 continue
+
+            dest = os.readlink(os.path.join(directory, rel_path))
 
             if links == "never":
                 if not os.path.exists(dest):
@@ -140,6 +138,7 @@ def prepare_directory_upload(
 
             dest = _normalize_and_sanitize_path(dest)
             dest_components = _match_path_to_cache(dest, cache_dir)
+
             if dest_components:
                 out_links.append(
                     {
@@ -160,6 +159,7 @@ def prepare_directory_upload(
                 raise ValueError(
                     f"Cannot use a dangling link to '{dest}' as a regular upload."
                 )
+
             out_files.append(rel_path)
 
     return {"files": out_files, "links": out_links}
