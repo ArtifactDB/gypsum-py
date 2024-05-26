@@ -14,7 +14,7 @@ __license__ = "MIT"
 
 def fetch_metadata_schema(
     name: str = "bioconductor/v1.json",
-    cache_dir: str = None,
+    cache_dir: str = cache_directory(),
     overwrite: bool = False,
 ) -> str:
     """Fetch a JSON schema file for metadata to be inserted into a SQLite database.
@@ -58,7 +58,7 @@ def fetch_metadata_schema(
     if cache_dir is None:
         cache_path = tempfile.mktemp(suffix=".json")
     else:
-        cache_dir = os.path.join(cache_directory(cache_dir), "schemas")
+        cache_dir = os.path.join(cache_dir, "schemas")
 
         cache_path = os.path.join(cache_dir, name)
         if not os.path.exists(cache_path):

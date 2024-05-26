@@ -35,7 +35,7 @@ def save_version(
     project: str,
     asset: str,
     version: str,
-    cache_dir: Optional[str] = None,
+    cache_dir: Optional[str] = cache_directory(),
     overwrite: bool = False,
     relink: bool = True,
     concurrent: int = 1,
@@ -203,7 +203,7 @@ def save_file(
     asset: str,
     version: str,
     path: str,
-    cache_dir: Optional[str] = None,
+    cache_dir: Optional[str] = cache_directory(),
     overwrite: bool = False,
     url: str = rest_url(),
 ):

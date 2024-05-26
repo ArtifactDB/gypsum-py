@@ -16,6 +16,7 @@ finally:
     del version, PackageNotFoundError
 
 
+from ._utils import BUCKET_CACHE_NAME
 from .auth import access_token, set_access_token
 from .cache_directory import cache_directory
 from .clone_operations import clone_version
@@ -44,3 +45,4 @@ from .search_metadata import define_text_query, search_metadata_text
 from .set_operations import set_permissions, set_quota
 from .upload_api_operations import abort_upload, complete_upload, start_upload
 from .upload_file_actions import upload_directory, upload_files
+from .validate_metadata import validate_metadata
