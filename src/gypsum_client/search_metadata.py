@@ -232,6 +232,9 @@ def sanitize_query(
         else:
             raise ValueError("'query' must have atleast 1 element.")
 
+    if isinstance(query, str):
+        query = define_text_query(query)
+
     if query.type == "not":
         query.child = sanitize_query(query.child)
         if query.child is None:
