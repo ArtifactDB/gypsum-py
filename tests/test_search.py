@@ -172,6 +172,12 @@ def test_search_metadata_text_text_searches():
     assert len(result) == 1
     assert result[0]["path"] == "mikoto.txt"
 
+    result1 = search_metadata_text(
+        sqlite_path, "mikoto", include_metadata=False, latest=False
+    )
+    assert len(result1) == 1
+    assert result1[0]["path"] == "mikoto.txt"
+
     result = search_metadata_text(
         sqlite_path, ["kuroko"], include_metadata=False, latest=False
     )
