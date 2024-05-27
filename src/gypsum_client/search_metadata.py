@@ -67,7 +67,7 @@ class GypsumSearchClause:
 
 def search_metadata_text(
     path: str,
-    query: Union[str, GypsumSearchClause],
+    query: Union[str, List[str], GypsumSearchClause],
     latest: bool = True,
     include_metadata: bool = True,
 ) -> List[Dict]:
@@ -169,8 +169,10 @@ def search_metadata_text(
 
         if cond:
             stmt += " WHERE " + " AND ".join(cond)
+            cursor = conn.execute(stmt, params)
+        else:
+            cursor = conn.execute(stmt)
 
-        cursor = conn.execute(stmt, params)
         results = [dict(row) for row in cursor.fetchall()]
         if include_metadata:
             for result in results:
@@ -207,7 +209,7 @@ def define_text_query(
 
 
 def search_metadata_text_filter(
-    query: Union[str, GypsumSearchClause], pid_name: str = "paths.pid"
+    query: Union[str, List[str], GypsumSearchClause], pid_name: str = "paths.pid"
 ) -> Dict[str, Union[str, List]]:
     query = sanitize_query(query)
 
@@ -220,7 +222,7 @@ def search_metadata_text_filter(
 
 
 def sanitize_query(
-    query: Union[str, GypsumSearchClause],
+    query: Union[str, List[str], GypsumSearchClause],
 ) -> Optional[GypsumSearchClause]:
     if isinstance(query, list):
         if len(query) > 1:
