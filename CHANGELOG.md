@@ -1,7 +1,6 @@
 # Changelog
 
-## Version 0.1 (development)
+## Version 0.2.0
 
-- Feature A added
-- FIX: nasty bug #1729 fixed
-- add your changes here!
+- Modified `cache_directory()` to use **rappdirs** for the default cache location.
+- `cache_directory()` now returns the previous cache location when `dir` is not `None`.
