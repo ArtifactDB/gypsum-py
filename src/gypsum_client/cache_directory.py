@@ -9,7 +9,7 @@ __license__ = "MIT"
 CURRENT_CACHE_DIRECTORY = None
 
 
-def cache_directory(dir: Optional[str] = None):
+def cache_directory(dir: Optional[str] = None) -> str:
     """Cache directory.
 
     Specify the cache directory in the local filesystem
@@ -19,35 +19,30 @@ def cache_directory(dir: Optional[str] = None):
     before the first call to ``cache_directory()``, it is used
     as the initial location of the cache directory.
     Otherwise, the initial location is set to user's home
-    directory defined by ``Path.home()``.
+    directory defined by ``appdirs.user_cache_dir()``.
 
     Args:
         dir:
-            Path to the cache directory.
-            If `None`, a default cache location is used.
+            Path to the current cache directory.  If `None`, a default cache
+            location is chosen.
 
     Returns:
-        Path to the cache directory.
+        If ``dir`` is ``None``, the path to the cache directory is returned.
+
+        If ``dir`` is supplied, it is used to set the path to the cache
+        directory, and the previous location of the directory is returned.
     """
     global CURRENT_CACHE_DIRECTORY
 
     if CURRENT_CACHE_DIRECTORY is None:
         _from_env = os.environ.get("GYPSUM_CACHE_DIR", None)
         if _from_env is not None:
-            if not os.path.exists(_from_env):
-                raise FileNotFoundError(
-                    f"Path {_from_env} does not exist or is not accessible."
-                )
-
             CURRENT_CACHE_DIRECTORY = _from_env
         else:
             import appdirs
             CURRENT_CACHE_DIRECTORY = appdirs.user_cache_dir("gypsum", "ArtifactDB")
-            os.makedirs(CURRENT_CACHE_DIRECTORY, exist_ok=True)
 
+    prev = CURRENT_CACHE_DIRECTORY
     if dir is not None:
-        if not os.path.exists(dir):
-            raise FileNotFoundError(f"Path {dir} does not exist or is not accessible.")
         CURRENT_CACHE_DIRECTORY = dir
-
-    return CURRENT_CACHE_DIRECTORY
+    return prev
