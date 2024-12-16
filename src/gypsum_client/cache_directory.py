@@ -41,7 +41,8 @@ def cache_directory(dir: Optional[str] = None):
 
             CURRENT_CACHE_DIRECTORY = _from_env
         else:
-            CURRENT_CACHE_DIRECTORY = os.path.join(str(Path.home()), "gypsum", "cache")
+            import appdirs
+            CURRENT_CACHE_DIRECTORY = appdirs.user_cache_dir("gypsum", "ArtifactDB")
             os.makedirs(CURRENT_CACHE_DIRECTORY, exist_ok=True)
 
     if dir is not None:
